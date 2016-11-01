@@ -1,3 +1,4 @@
+*.iml
 .gradle
 /local.properties
 /.idea/workspace.xml
@@ -6,7 +7,3 @@
 /build
 /captures
 .externalNativeBuild
-<<<<<<< HEAD
-=======
-.idea/compiler.xml
->>>>>>> origin/master
