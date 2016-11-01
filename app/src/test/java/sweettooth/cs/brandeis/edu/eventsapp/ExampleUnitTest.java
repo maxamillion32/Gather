@@ -1,4 +1,4 @@
-package chelsihu.cs.brandeis.edu.testapp;
+package sweettooth.cs.brandeis.edu.eventsapp;
 
 import org.junit.Test;
 
