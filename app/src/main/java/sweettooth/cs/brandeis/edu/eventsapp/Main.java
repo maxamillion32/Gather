@@ -10,6 +10,4 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
-    //tyler testing VCS in Android Studio--delete me!
 }
