@@ -19,7 +19,7 @@ public class DatabaseTester extends AppCompatActivity {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
-        myRef.setValue("Hello, World!");
+        myRef.setValue("Hello, World! Test 2");
     }
 }
 

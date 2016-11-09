@@ -23,6 +23,19 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+
+
+        <activity android:name=".GoogleAuth">
+            android:label="Database Tester">
+            <intent-filter>
+                <action android:name="sweettooth.cs.brandeis.edu.eventsapp.GoogleAuth" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
     </application>
 
 </manifest>
