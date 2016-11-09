@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "862057622205",
+    "firebase_url": "https://event-app-fea40.firebaseio.com",
+    "project_id": "event-app-fea40",
+    "storage_bucket": "event-app-fea40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862057622205:android:9f052c8cf333556b",
+        "android_client_info": {
+          "package_name": "sweettooth.cs.brandeis.edu.eventsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "862057622205-iik1saab85fv8ijlgmvfif4inn2hfnmn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhtOE4Wc5WEJr1z2WJc8zZCsEq_deZ570"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
