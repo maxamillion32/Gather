@@ -18,11 +18,11 @@ public class Main extends AppCompatActivity {
         //starts tester for database functions. comment out to ignore
         //startActivity(new Intent("sweettooth.cs.brandeis.edu.eventsapp.DatabaseTester"));
 
-        /* Temporarily commented out-- ask Christine for clarification
+        //Temporarily commented out-- ask Christine for clarification
         //Sign In that doesn't really do anything and probably half broken, but now we have button for signin yay
-        Intent intent = new Intent(Main.this, GoogleAuth.class);
-        startActivity(intent);
-        */
+        //Intent intent = new Intent(Main.this, GoogleAuth.class);
+        //startActivity(intent);
+
 
         //bottom navigation bar
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
