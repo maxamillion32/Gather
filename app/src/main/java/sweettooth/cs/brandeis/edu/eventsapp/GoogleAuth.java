@@ -21,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -43,6 +44,7 @@ public class GoogleAuth extends AppCompatActivity  implements
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
     private static final String TAG = "GoogleActivity";
+    TextView user;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -50,12 +52,19 @@ public class GoogleAuth extends AppCompatActivity  implements
         setContentView(R.layout.login_screen);
 
 
-        SignInButton button = (SignInButton) findViewById(R.id.sign_in_button);
-        TextView user = (TextView) findViewById(R.id.currentUser);
+        SignInButton inbutton = (SignInButton) findViewById(R.id.sign_in_button);
+        Button outbutton = (Button) findViewById(R.id.sign_out_button);
+        user = (TextView) findViewById(R.id.currentUser);
 
 
         mAuth = FirebaseAuth.getInstance();
-        user.setText(mAuth.getCurrentUser().getDisplayName() + " is signed in.");
+        if(mAuth.getCurrentUser() != null){
+            user.setText(mAuth.getCurrentUser().getDisplayName() + " is signed in.");
+        }
+        else{
+            user.setText("Please sign in.");
+        }
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -73,15 +82,37 @@ public class GoogleAuth extends AppCompatActivity  implements
 
 
 
-        button.setOnClickListener(new View.OnClickListener() {
+        inbutton.setOnClickListener(new View.OnClickListener() {
 
 
             public void onClick(View view) {
                 //Sends description and notes back to main to create an entry
                 switch (view.getId()) {
                     case R.id.sign_in_button:
+                        Log.d("BUTTONBUTTONBUTTON", "sign in button click");
                         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                         startActivityForResult(signInIntent, RC_SIGN_IN);
+                        user.setText("Attempting to sign in...");
+
+
+                        break;
+                    // ...
+                }
+
+
+            }
+
+        });
+
+        outbutton.setOnClickListener(new View.OnClickListener() {
+
+
+            public void onClick(View view) {
+                //Sends description and notes back to main to create an entry
+                switch (view.getId()) {
+                    case R.id.sign_out_button:
+                        signOut();
+                        user.setText("Please sign in.");
                         break;
                     // ...
                 }
@@ -132,12 +163,10 @@ public class GoogleAuth extends AppCompatActivity  implements
                 // ...
             }
         }
+
     }
 
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
+
     // [END signin]
 
     private void signOut() {
@@ -145,13 +174,7 @@ public class GoogleAuth extends AppCompatActivity  implements
         mAuth.signOut();
 
         // Google sign out
-        /*Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        updateUI(null);
-                    }
-                });*/
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -167,7 +190,10 @@ public class GoogleAuth extends AppCompatActivity  implements
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d("GoogleActivity", "signInWithCredential:onComplete:" + task.isSuccessful());
-
+                        if(mAuth.getCurrentUser() != null){
+                            //Log.d("BUTTON", "sign in button click");
+                            user.setText(mAuth.getCurrentUser().getDisplayName() + " is signed in.");
+                        }
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -179,6 +205,8 @@ public class GoogleAuth extends AppCompatActivity  implements
                         // ...
                     }
                 });
+
+
     }
 
 
@@ -207,6 +235,8 @@ public class GoogleAuth extends AppCompatActivity  implements
 
         mGoogleApiClient.connect();
         AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
+
+
 
     }
 
