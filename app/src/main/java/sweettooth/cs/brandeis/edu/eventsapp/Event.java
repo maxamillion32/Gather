@@ -14,7 +14,8 @@ public class Event {
     int checks;
 
 
-    public Event(String category, DateTime dt, String t, String d) {
+    public Event(String cat, DateTime dt, String t, String d) {
+        category = cat;
         dateTime = dt;
         title = t;
         description = d;
