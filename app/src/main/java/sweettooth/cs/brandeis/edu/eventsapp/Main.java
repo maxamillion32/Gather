@@ -16,12 +16,14 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //starts tester for database functions. comment out to ignore
+        //DBTesterNoActivity.test();
+        //DBTesterNoActivity dbTest = new DBTesterNoActivity();
         //startActivity(new Intent("sweettooth.cs.brandeis.edu.eventsapp.DatabaseTester"));
 
         //Temporarily commented out-- ask Christine for clarification
         //Sign In that doesn't really do anything and probably half broken, but now we have button for signin yay
-        Intent intent = new Intent(Main.this, GoogleAuth.class);
-        startActivity(intent);
+        //Intent intent = new Intent(Main.this, GoogleAuth.class);
+        //startActivity(intent);
 
 
         //bottom navigation bar
