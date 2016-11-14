@@ -161,6 +161,9 @@ public class GoogleAuth extends AppCompatActivity  implements
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             Log.d("TESTSUCCESS", "" + result.getSignInAccount());
+            Log.d("TESTGOOGLE", ""+ result);
+            Log.d("TESTSTATUS", "" + result.getStatus());
+            Log.d("TESTSUCCESS", "" + result.isSuccess());
 
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
