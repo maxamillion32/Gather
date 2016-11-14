@@ -6,21 +6,18 @@ import android.os.Bundle;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+//could be used to test database operations in the context of an activity
+
 public class DatabaseTester extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.database_tester);
-        test();
+        //test();
     }
 
-    private void test() {
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-        myRef.setValue("Hello, World! Test 2");
-    }
+
 }
 
 
