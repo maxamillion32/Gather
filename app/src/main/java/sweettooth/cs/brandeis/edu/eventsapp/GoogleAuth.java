@@ -90,11 +90,17 @@ public class GoogleAuth extends AppCompatActivity  implements
                 switch (view.getId()) {
                     case R.id.sign_in_button:
                         Log.d("BUTTONBUTTONBUTTON", "sign in button click");
+                        user.setText("Attempting to sign in...");
                         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                         startActivityForResult(signInIntent, RC_SIGN_IN);
-                        user.setText("Attempting to sign in...");
 
 
+                        if(mAuth.getCurrentUser() != null){
+                            user.setText(mAuth.getCurrentUser().getDisplayName() + " is signed in.");
+                        }
+                        else{
+                            user.setText("Please sign in.");
+                        }
                         break;
                     // ...
                 }
@@ -144,7 +150,8 @@ public class GoogleAuth extends AppCompatActivity  implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -153,10 +160,11 @@ public class GoogleAuth extends AppCompatActivity  implements
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            Log.d("TESTSUCCESS", "" + result.getSignInAccount());
+
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
@@ -175,6 +183,7 @@ public class GoogleAuth extends AppCompatActivity  implements
 
         // Google sign out
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        //Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -233,8 +242,8 @@ public class GoogleAuth extends AppCompatActivity  implements
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
 
-        mGoogleApiClient.connect();
-        AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
+        //mGoogleApiClient.connect();
+        //AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
 
 
 
@@ -248,8 +257,8 @@ public class GoogleAuth extends AppCompatActivity  implements
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
-        mGoogleApiClient.disconnect();
+        //AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
+        //mGoogleApiClient.disconnect();
 
     }
 }
