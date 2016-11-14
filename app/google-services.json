@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "862057622205-kcu03esgr7t5ldu6kmkv4e0t7bn7l2m3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sweettooth.cs.brandeis.edu.eventsapp",
+            "certificate_hash": "CB899138C02A41BFD9B9F0085CFA18D7249AB993"
+          }
+        },
+        {
           "client_id": "862057622205-iik1saab85fv8ijlgmvfif4inn2hfnmn.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "862057622205-iik1saab85fv8ijlgmvfif4inn2hfnmn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
