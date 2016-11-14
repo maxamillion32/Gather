@@ -37,13 +37,13 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class GoogleAuth extends AppCompatActivity  implements
         GoogleApiClient.OnConnectionFailedListener {
 
-    //steps to grab your SHA1
+    //steps to get your SHA1 fingerprint:
     //make sure build variant is in debug mode
     //click gradle project on right side of AndroidStudios
     //goto Event-App -> Event-App -> Tasks -> android -> signingReport and refresh all and run to find your SHA1 fingerprint
     //find SHA1 fingerprint in output of run (4.Run)
     //go into firebase console and click project settings and add your fingerprint under SHA1
-    //test app and make sure Log.d prints in logcat show success for TESTSUCCESS
+    //test app and make sure Log.d prints in logcat shows D/TESTSUCCESSBOOLEAN: true
     //if there is a DEVELOPER_ERROR, try again using the gmail account linked to firebase console for login
     //if success, login to firebase console and check 'authentication' tab for your Google provider to confirm
 
@@ -173,7 +173,7 @@ public class GoogleAuth extends AppCompatActivity  implements
             Log.d("TESTSUCCESS", "" + result.getSignInAccount());
             Log.d("TESTGOOGLE", ""+ result);
             Log.d("TESTSTATUS", "" + result.getStatus());
-            Log.d("TESTSUCCESS", "" + result.isSuccess());
+            Log.d("TESTSUCCESSBOOLEAN", "" + result.isSuccess());
 
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
