@@ -31,7 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 /**
- * Created by Chelsi Hu on 11/9/2016.
+ * Google sign in authentication.
  */
 
 public class GoogleAuth extends AppCompatActivity  implements
@@ -53,7 +53,7 @@ public class GoogleAuth extends AppCompatActivity  implements
 
 
         SignInButton inbutton = (SignInButton) findViewById(R.id.sign_in_button);
-        Button outbutton = (Button) findViewById(R.id.sign_out_button);
+        //Button outbutton = (Button) findViewById(R.id.sign_out_button);
         user = (TextView) findViewById(R.id.currentUser);
 
 
@@ -78,10 +78,6 @@ public class GoogleAuth extends AppCompatActivity  implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addApi(AppIndex.API).build();
 
-
-
-
-
         inbutton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -93,17 +89,13 @@ public class GoogleAuth extends AppCompatActivity  implements
                         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                         startActivityForResult(signInIntent, RC_SIGN_IN);
                         user.setText("Attempting to sign in...");
-
-
                         break;
-                    // ...
                 }
-
-
             }
 
         });
 
+        /*
         outbutton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -120,8 +112,7 @@ public class GoogleAuth extends AppCompatActivity  implements
 
             }
 
-        });
-
+        }); */
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -138,7 +129,6 @@ public class GoogleAuth extends AppCompatActivity  implements
             }
         };
 
-
     }
 
 
@@ -149,6 +139,11 @@ public class GoogleAuth extends AppCompatActivity  implements
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // send user to dashboard
+        // This should be moved once the code below to authenticate works;
+        // As of right now, the code does not authenticate. It never enters the if loops.
+        startActivity(new Intent(this, Main.class));
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
