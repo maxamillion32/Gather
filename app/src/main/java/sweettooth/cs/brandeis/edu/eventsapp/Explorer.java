@@ -60,7 +60,7 @@ public class Explorer extends AppCompatActivity {
             }
             @Override
             public void onChangeMonth(int month, int year) {
-                Toast.makeText(getApplicationContext(),"month: " + month + " year: " + year, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
             }
         };
         // set listener
@@ -70,8 +70,7 @@ public class Explorer extends AppCompatActivity {
         // NEED TO CHANGE: what is displayed when clicking dialog
         Button dialogButton = (Button) findViewById(R.id.dialog);
         final Bundle instanceState = savedInstanceState;
-
-        // create and set button listener
+        // create and set dialog button listener
         dialogButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +91,15 @@ public class Explorer extends AppCompatActivity {
                     dialogCaldroidFragment.setArguments(bundle);
                 }
                 dialogCaldroidFragment.show(getSupportFragmentManager(), "CALDROID_DIALOG_FRAGMENT");
+            }
+        });
+
+        //go back to Main Activity
+        Button backToMain = (Button) findViewById(R.id.backToMain);
+        backToMain.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

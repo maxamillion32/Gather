@@ -3,5 +3,6 @@
     <string name="home">HOME</string>
     <string name="explore">EXPLORE</string>
     <string name="settings">SETTINGS</string>
-    <string name="dialogString">Dialog Calendar</string>
+    <string name="dialogString">Dialog</string>
+    <string name="back">Go Back to Main Activity</string>
 </resources>
