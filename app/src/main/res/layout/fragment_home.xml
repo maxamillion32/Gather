@@ -7,6 +7,28 @@
         android:id="@+id/hellohome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="hello home fragment"/>
+        android:text="Discover!" />
+
+    <ViewFlipper
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        android:id="@+id/discoverFlip" >
+
+        <TextView
+            android:text="Event 1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/event1" />
+        <TextView
+            android:text="Event 2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/event2" />
+        <TextView
+            android:text="Event 3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/event3" />
+    </ViewFlipper>
 
 </LinearLayout>

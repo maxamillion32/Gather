@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -36,7 +37,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.Executor;
 
 /**
@@ -81,18 +84,21 @@ public class SettingsFragment extends Fragment implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+
                     Log.d("GoogleActivity", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
-                    // User is signed out
+
                     Log.d("GoogleActivity", "onAuthStateChanged:signed_out");
                 }
-                // ...
+
             }
         };
 
         return settingsFragmentView;
     }
+
+
+
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
@@ -102,16 +108,11 @@ public class SettingsFragment extends Fragment implements
         user = (TextView) v.findViewById(R.id.currentUser);
 
 
-
-
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
 
         if(mGoogleApiClient == null){
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -121,32 +122,25 @@ public class SettingsFragment extends Fragment implements
         }
 
 
-
-
-
-
         inbutton.setOnClickListener(new View.OnClickListener() {
 
 
             public void onClick(View view) {
-                //Sends description and notes back to main to create an entry
-                switch (view.getId()) {
-                    case R.id.sign_in_button:
-                        Log.d("BUTTONBUTTONBUTTON", "sign in button click");
 
-                        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                        startActivityForResult(signInIntent, 1);
+                Log.d("BUTTONBUTTONBUTTON", "sign in button click");
+
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, 1);
 
 
-                        if(mAuth.getCurrentUser() != null){
-                            user.setText(mAuth.getCurrentUser().getDisplayName());
-                        }
-                        else{
-                            user.setText("Please sign in.");
-                        }
-                        break;
-                    // ...
+                if(mAuth.getCurrentUser() != null){
+                    user.setText(mAuth.getCurrentUser().getDisplayName());
                 }
+                else{
+                    user.setText("Please sign in.");
+                }
+
+
 
 
             }
@@ -157,16 +151,8 @@ public class SettingsFragment extends Fragment implements
 
 
             public void onClick(View view) {
-                //Sends description and notes back to main to create an entry
-                switch (view.getId()) {
-                    case R.id.sign_out_button:
-                        signOut();
-                        user.setText("Please sign in.");
-                        break;
-                    // ...
-                }
-
-
+                signOut();
+                user.setText("Please sign in.");
             }
 
         });
@@ -190,9 +176,9 @@ public class SettingsFragment extends Fragment implements
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+
             } else {
-                // Google Sign In failed, update UI appropriately
-                // ...
+                // Google Sign In failed
             }
 
         }
@@ -200,26 +186,23 @@ public class SettingsFragment extends Fragment implements
     }
 
 
-    // [END signin]
-
     void signOut() {
+
         // Firebase sign out
         mAuth.signOut();
-
         // Google sign out
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-        //Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
+
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d("GoogleActivity", "firebaseAuthWithGoogle: " + acct.getDisplayName());
         Log.d("GoogleActivity", "IDTOKEN: " + acct.getIdToken());
 
-
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
         final Uri u = acct.getPhotoUrl();
+
 
         Log.d("GoogleActivity", "Cred: " + credential);
         mAuth.signInWithCredential(credential)
@@ -233,10 +216,15 @@ public class SettingsFragment extends Fragment implements
 
                             //Displays profile image in imageview, but broken
                             /*try {
-                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), u);
-                                i.setImageBitmap(bitmap);
+
+
+                                InputStream stream = getActivity().getContentResolver().openInputStream(u);
+                                BufferedInputStream bufferedInputStream = new BufferedInputStream(stream);
+                                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+                                i.setImageBitmap(bmp);
                             }catch (IOException e){
-                                Log.d("GoogleActivity", "Error setting profile image.");
+
+                                Log.d("GoogleActivity", "Error setting profile image." + e);
                             }*/
 
                         }
@@ -255,34 +243,10 @@ public class SettingsFragment extends Fragment implements
     }
 
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("GoogleAuth Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-
-        //mGoogleApiClient.connect();
-        //AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
-
-
-
     }
 
     @Override
@@ -291,10 +255,6 @@ public class SettingsFragment extends Fragment implements
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
-        //mGoogleApiClient.disconnect();
 
     }
 

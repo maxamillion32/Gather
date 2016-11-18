@@ -3,9 +3,12 @@ package sweettooth.cs.brandeis.edu.eventsapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarFragment;
+
+import java.util.List;
 
 public class Main extends AppCompatActivity {
 
@@ -15,8 +18,9 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //does basic test of database functionality--perhaps uncomment when we turn in on Tues
-        //DatabaseUtility dbUtil = new DatabaseUtility();
-        //dbUtil.test();
+        DatabaseUtility dbUtil = new DatabaseUtility();
+        List<String> events= dbUtil.getTopEvents();
+        Log.d("DATA",""+  events);
 
         //starts activity to test database functionality--nothing implemented right now
         //startActivity(new Intent("sweettooth.cs.brandeis.edu.eventsapp.DatabaseTester"));
