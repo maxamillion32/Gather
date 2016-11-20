@@ -22,7 +22,8 @@ public class Main extends AppCompatActivity {
 
         //does basic test of database functionality--perhaps uncomment when we turn in on Tues
         DatabaseUtility dbUtil = new DatabaseUtility();
-        dbUtil.getTopEvents();
+        List<Event> events =  dbUtil.getTopEvents(5);
+        System.out.println("LIST:" + events);
         //Log.d("DATA",""+  events);
 
         //starts activity to test database functionality--nothing implemented right now

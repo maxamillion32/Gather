@@ -74,11 +74,13 @@ public class DatabaseUtility {
         else return null;
     }
 
-    protected List<String> getTopEvents(){
+    //Gets top j events
+    protected List<Event> getTopEvents(final int j){
+        final List<Event> events = new ArrayList<>();
 
-        DatabaseReference userEventsRef = databaseRef.child("Events");
+        DatabaseReference topEventsRef = databaseRef.child("Events");
 
-
+        topEventsRef.orderByChild("checks");
         ValueEventListener userEventsListener = new ValueEventListener() {
             //called when attached to reference and when node or its children is modified
             //dataSnapshot is an object representing database contents
@@ -87,16 +89,26 @@ public class DatabaseUtility {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
                     Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
+
+                    int i = 1;
                     for (DataSnapshot child : childSnapshots) {
+
                         Event event = child.getValue(Event.class);
-                        System.out.println(dataSnapshot.getKey() + event.getTitle());
+                        events.add(event);
+
+                        if(i == j){
+                            break;
+                        }
                         //HashMap<String, Object> map= (HashMap)child.getValue();
                         //Log.d("DATA",""+  map.get("title"));
 
                         //eventIDs.add(child.getKey());
                     }
+
+
                     //do something with eventIDs, such as populate list
                 }
+
             }
 
 
@@ -107,8 +119,16 @@ public class DatabaseUtility {
             }
         };
         //attaches listener to reference
-        userEventsRef.addValueEventListener(userEventsListener);
-        return null;
+        topEventsRef.addValueEventListener(userEventsListener);
+        /*try {
+            while(events.size() == 0){
+                System.out.println("Waiting for data to be pulled...");
+                //Thread.sleep(300);
+            }
+        }catch (Exception e){
+
+        }*/
+        return events;
 
     }
 
