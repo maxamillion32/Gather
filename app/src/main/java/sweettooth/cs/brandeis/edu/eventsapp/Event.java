@@ -8,10 +8,11 @@ package sweettooth.cs.brandeis.edu.eventsapp;
 public class Event {
 
     String category;
-    DateTime dateTime;
-    String title;
-    String description;
     int checks;
+    DateTime dateTime;
+    String description;
+    String title;
+
 
 
     public Event(String cat, DateTime dt, String t, String d) {
@@ -24,6 +25,26 @@ public class Event {
 
     public Event() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDateTime(DateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setChecks(int checks) {
+        this.checks = checks;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public DateTime getDateTime() {

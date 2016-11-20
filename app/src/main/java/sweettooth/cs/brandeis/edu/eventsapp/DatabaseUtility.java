@@ -88,8 +88,10 @@ public class DatabaseUtility {
                 if (dataSnapshot.hasChildren()) {
                     Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
                     for (DataSnapshot child : childSnapshots) {
-                        HashMap<String, Object> map= (HashMap)child.getValue();
-                        Log.d("DATA",""+  map.get("title"));
+                        Event event = child.getValue(Event.class);
+                        System.out.println(dataSnapshot.getKey() + event.getTitle());
+                        //HashMap<String, Object> map= (HashMap)child.getValue();
+                        //Log.d("DATA",""+  map.get("title"));
 
                         //eventIDs.add(child.getKey());
                     }

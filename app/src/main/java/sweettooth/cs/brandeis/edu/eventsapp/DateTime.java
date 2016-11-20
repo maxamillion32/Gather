@@ -6,11 +6,18 @@ package sweettooth.cs.brandeis.edu.eventsapp;
 
 public class DateTime {
 
-    private int year;
-    private int month;
-    private int day;
-    private int hour;
-    private int minute;
+    public int day;
+    public int hour;
+    public int minute;
+    public int month;
+    public int year;
+
+
+
+    public DateTime () {
+
+    }
+
 
     public DateTime (int y, int m, int d, int h, int min) {
         year = y;
