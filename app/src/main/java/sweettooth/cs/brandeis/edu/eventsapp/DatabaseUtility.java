@@ -81,6 +81,7 @@ public class DatabaseUtility {
         DatabaseReference topEventsRef = databaseRef.child("Events");
 
         topEventsRef.orderByChild("checks");
+
         ValueEventListener userEventsListener = new ValueEventListener() {
             //called when attached to reference and when node or its children is modified
             //dataSnapshot is an object representing database contents
