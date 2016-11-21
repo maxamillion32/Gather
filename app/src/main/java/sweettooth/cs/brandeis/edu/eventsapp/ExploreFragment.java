@@ -79,9 +79,9 @@ public class ExploreFragment extends Fragment {
                 Log.d("DATE", dateTest);
                 String arrayTest[];
                 if (dateTest.contains("24") && dateTest.contains("Nov")) {
-                    arrayTest = new String[] {"Thanksgiving Event 1", "Thanksgiving Event 2", "Thanksgiving Event 3"};
+                    arrayTest = new String[] {"Events on " + dateTest, "Thanksgiving Event 1", "Thanksgiving Event 2", "Thanksgiving Event 3"};
                 } else {
-                    arrayTest = new String[] {"Not Thanksgiving Event 1", "Not Thanksgiving Event 2", "Not Thanksgiving Event 3"};
+                    arrayTest = new String[] {"Events on " + dateTest, "Not Thanksgiving Event 1", "Not Thanksgiving Event 2", "Not Thanksgiving Event 3"};
                 }
                 ListView lstView = new ListView(fragAct);
                 lstView.setAdapter(new ArrayAdapter<>(fragAct, R.layout.test_event_list, R.id.listTxtView, arrayTest));
