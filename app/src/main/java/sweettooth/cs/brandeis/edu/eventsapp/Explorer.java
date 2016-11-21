@@ -4,6 +4,10 @@ package sweettooth.cs.brandeis.edu.eventsapp;
  * Created by Tyler on 11/13/16.
  */
 
+/*
+use ExploreFragment now!! (delete this class later)
+
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +61,8 @@ public class Explorer extends AppCompatActivity {
             @Override
             public void onSelectDate(Date date, View view) {
                 Toast.makeText(getApplicationContext(), dateFormat.format(date), Toast.LENGTH_SHORT).show();
+
+
             }
             @Override
             public void onChangeMonth(int month, int year) {
@@ -115,3 +121,4 @@ public class Explorer extends AppCompatActivity {
         }
     }
 }
+*/
