@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -55,7 +56,7 @@ public class HomeFragment extends Fragment {
         //updates reference to database automatically when database is modified
         databaseRef.keepSynced(true);
 
-        final ListView myEventListView = (ListView) homeFragmentView.findViewById(R.id.homeListView);
+        final GridView myEventsGridView = (GridView) homeFragmentView.findViewById(R.id.home_gridview);
 
         //accesses user's subsribed events. This code would be better suited in an activity
         //String userID = user.getUid();
@@ -106,7 +107,7 @@ public class HomeFragment extends Fragment {
                                     usersEvents.add(event);
                                 }
                                 adapter.populateEventsList(usersEvents);
-                                myEventListView.setAdapter(adapter);
+                                myEventsGridView.setAdapter(adapter);
                                 Log.d(logTag, "ListView adapter should be set!");
                             }
                         }
