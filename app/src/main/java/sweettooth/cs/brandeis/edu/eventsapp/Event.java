@@ -5,22 +5,22 @@ package sweettooth.cs.brandeis.edu.eventsapp;
  * Event object class
  */
 
-public class Event {
+public class Event implements Comparable<Event> {
 
-    String category;
-    int checks;
-    DateTime dateTime;
-    String description;
-    String title;
+    public String category;
+    public int checks;
+    public DateTime dateTime;
+    public String description;
+    public String title;
 
 
 
-    public Event(String cat, DateTime dt, String t, String d) {
+    public Event(String cat, int chcks, DateTime dt, String d, String t) {
         category = cat;
         dateTime = dt;
         title = t;
         description = d;
-        checks = 0;
+        checks = chcks;
     }
 
     public Event() {
@@ -65,5 +65,9 @@ public class Event {
 
     public  void addCheck() {
         checks++;
+    }
+
+    public int compareTo(Event otherEvent) {
+        return this.getDateTime().compareTo(otherEvent.getDateTime());
     }
 }

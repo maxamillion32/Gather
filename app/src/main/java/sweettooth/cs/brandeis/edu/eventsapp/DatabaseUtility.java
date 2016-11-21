@@ -29,7 +29,7 @@ public class DatabaseUtility {
         //create new event and add to database
         DateTime dt = new DateTime(2017, 3, 8, 14, 0);
         String desc = "Donna The Buffalo playing at Crane Beach";
-        Event event = new Event ("Music", dt, "Concert at the Beach", desc);
+        Event event = new Event ("Music", 0, dt, "Concert at the Beach", desc);
         String eventID = addEventToDB(event);
 
         //unique auto-generated user-id, hardcoded
