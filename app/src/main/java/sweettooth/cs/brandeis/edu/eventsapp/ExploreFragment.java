@@ -14,6 +14,10 @@ import java.util.Date;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 import android.app.Activity;
+import android.widget.ListView;
+import android.widget.ArrayAdapter;
+import android.app.Dialog;
+import android.util.Log;
 
 /**
  * Explore Fragment
@@ -65,11 +69,27 @@ public class ExploreFragment extends Fragment {
 
         // create listener for selecting dates and changing months
         final CaldroidListener listener = new CaldroidListener() {
-            // NEED TO ADD: functionality when clicking date to see events for the date in list form
             @Override
             public void onSelectDate(Date date, View view) {
                 Toast.makeText(getActivity().getApplicationContext(), dateFormat.format(date), Toast.LENGTH_SHORT).show();
+
+                //testing dialog display with hard-coded array
+                //TODO: build query for getting each date's info from db and adding it to list view
+                String dateTest = dateFormat.format(date);
+                Log.d("DATE", dateTest);
+                String arrayTest[];
+                if (dateTest.contains("24") && dateTest.contains("Nov")) {
+                    arrayTest = new String[] {"Thanksgiving Event 1", "Thanksgiving Event 2", "Thanksgiving Event 3"};
+                } else {
+                    arrayTest = new String[] {"Not Thanksgiving Event 1", "Not Thanksgiving Event 2", "Not Thanksgiving Event 3"};
+                }
+                ListView lstView = new ListView(fragAct);
+                lstView.setAdapter(new ArrayAdapter<>(fragAct, R.layout.test_event_list, R.id.listTxtView, arrayTest));
+                Dialog dialog = new Dialog(fragAct);
+                dialog.setContentView(lstView);
+                dialog.show();
             }
+
             @Override
             public void onChangeMonth(int month, int year) {
                 Toast.makeText(getActivity().getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
