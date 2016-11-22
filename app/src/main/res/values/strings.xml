@@ -3,6 +3,19 @@
     <string name="home">HOME</string>
     <string name="explore">EXPLORE</string>
     <string name="settings">SETTINGS</string>
+    <string name="addEvent">Add Public Event</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="save">Save Event</string>
+    <string name="categoryLabel">Choose an event category:</string>
+
+    <string-array name="categories">
+        <item>Business</item>
+        <item>Community</item>
+        <item>Music</item>
+        <item>Sports</item>
+        <item>Other</item>
+    </string-array>
 
     <!--
     remove dialogString and back strings later when Explorer Activity is removed

@@ -23,9 +23,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!--
-        now a fragment and no longer an activity.. remove when Explorer class is removed!
-        -->
+        <!--         now a fragment and no longer an activity.. remove when Explorer class is removed! -->
         <activity android:name=".Explorer">
             <intent-filter>
                 <action android:name="sweettooth.cs.brandeis.edu.eventsapp.Explorer" />
@@ -41,13 +39,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-        App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <activity android:name=".AddEvent">
+            android:parentActivityName="sweettooth.cs.brandeis.edu.eventsapp.Main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sweettooth.cs.brandeis.edu.eventsapp.Main" />
+            <intent-filter>
+                <action android:name="sweettooth.cs.brandeis.edu.eventsapp.AddEvent" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!--
+        ATTENTION: This was auto-generated to add Google Play services to your project for
+        App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-
     </application>
 
 </manifest>
