@@ -1,13 +1,12 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -17,11 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -36,11 +32,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.Executor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Settings Fragment
@@ -49,11 +48,21 @@ import java.util.concurrent.Executor;
 public class SettingsFragment extends Fragment implements
         GoogleApiClient.OnConnectionFailedListener  {
 
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final DatabaseReference databaseRef = database.getReference();
+    List<String> allcategories = new ArrayList<>();
+    List<String> subbedcategories = new ArrayList<>();
+    ArrayList<Integer> itemsSelected  = new ArrayList<>();;
+
     TextView user;
+    TextView subList;
+    ImageView i;
+    Button subbutton;
+
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    ImageView i;
+
 
     public SettingsFragment() {
     }
@@ -66,9 +75,17 @@ public class SettingsFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View settingsFragmentView = inflater.inflate(R.layout.login_screen, container, false);
 
+
+        //Subscribe to catagories code starts here
+        subbutton = (Button) settingsFragmentView.findViewById(R.id.subscribe);
+        subList = (TextView) settingsFragmentView.findViewById(R.id.subList);
+        setSubButtonAction();
+        //Subscribe to catagories code ends here
+
+
+        //Google Authentication code starts here
         user = (TextView) settingsFragmentView.findViewById(R.id.currentUser);
         i = (ImageView) settingsFragmentView.findViewById(R.id.imageView);
 
@@ -93,9 +110,235 @@ public class SettingsFragment extends Fragment implements
 
             }
         };
+        //Google Authentication code ends here
 
         return settingsFragmentView;
     }
+
+    //Get all categories in DB
+    protected void getAllCategories(){
+
+        DatabaseReference catRef = databaseRef.child("CategoriesToEvents");
+
+        allcategories = new ArrayList<>();
+        ValueEventListener userEventsListener = new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
+
+
+                    for (DataSnapshot child : childSnapshots) {
+
+                        allcategories.add(child.getKey() + "");
+
+
+                    }
+
+                }
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //error w/ onDataChange
+                Log.d("DummyTag", "getUsersEventIDs:onCancelled", databaseError.toException());
+            }
+        };
+        //attaches listener to reference
+        catRef.addValueEventListener(userEventsListener);
+
+
+
+    }
+
+    //Get a list of categories that a user is subscribed to
+    protected void getSubbedCategories(){
+
+        DatabaseReference catRef = databaseRef.child("UserToCategories").child(getUserID());
+
+        ValueEventListener userEventsListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
+
+                    subbedcategories = new ArrayList<>();
+                    for (DataSnapshot child : childSnapshots) {
+
+                        subbedcategories.add(child.getKey() + "");
+                    }
+
+                }
+
+                if(subbedcategories.size() > 0){
+                    subList.setText("Categories that you are currently subscribed to: " + subbedcategories);
+                }
+                else {
+                    subList.setText("You are currently not subscribed to any categories. Add some above!");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //error w/ onDataChange
+                Log.d("DummyTag", "getUsersEventIDs:onCancelled", databaseError.toException());
+            }
+        };
+        //attaches listener to reference
+        catRef.addValueEventListener(userEventsListener);
+
+    }
+
+    //Sets the categories of a user
+    protected String setUserCategoryToDB(ArrayList<String> a) {
+        //creates child of event node and gets reference
+        DatabaseReference catRef = databaseRef.child("UserToCategories").child(getUserID());
+        catRef.removeValue();
+        System.out.println("DATABASE REF" + catRef);
+        for (String s:a){
+            catRef.child(s).setValue(true);
+        }
+
+        return null;
+    }
+
+    protected String getUserID(){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser() != null){
+            //return "WaUzsjdZwcN0og4vTu00JHPhWW32";
+            return mAuth.getCurrentUser().getUid();
+
+        }
+        else return null;
+    }
+
+    protected void setSubButtonAction(){
+
+        String uid = getUserID();
+
+
+        if(uid != null) {
+            System.out.println(uid);
+            getAllCategories();
+            getSubbedCategories();
+
+            subbutton.setOnClickListener(new View.OnClickListener() {
+
+
+                public void onClick(View view) {
+
+                    String[] catArray = new String[allcategories.size()];
+                    catArray = allcategories.toArray(catArray);
+
+                    final boolean[] checkedValues = new boolean[allcategories.size()];
+                    for(String s:subbedcategories){
+                        int i = allcategories.indexOf(s);
+                        if(i < 0){
+                            System.out.print("Somehow you are subscribed to a category that does not exist in our server!");
+                        }
+                        else {
+                            checkedValues[i] = true;
+
+
+                        }
+
+                    }
+
+                    //For loops and compare subbedcategories to allcategories
+
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Select categories to sub to. To unsub, uncheck the category.");
+                    builder.setMultiChoiceItems(catArray, checkedValues,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int selectedItemId,
+                                                    boolean isSelected) {
+                                    if (isSelected) {
+                                        checkedValues[selectedItemId] = true;
+
+                                    } else if (checkedValues[selectedItemId]) {
+
+                                        checkedValues[selectedItemId] = false;
+
+                                    }
+                                }
+                            })
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+
+
+                                    ArrayList<String> newsubcategories = new ArrayList<String>();
+                                    for(int i = 0; i < checkedValues.length; i++){
+                                        if(checkedValues[i]){
+                                            newsubcategories.add(allcategories.get(i));
+                                        }
+                                    }
+
+                                    setUserCategoryToDB(newsubcategories);
+
+                                    subbedcategories = newsubcategories;
+
+                                    if(newsubcategories.size() > 0){
+                                        subList.setText("Categories that you are currently subscribed to: " + newsubcategories);
+                                    }
+                                    else {
+                                        subList.setText("You are currently not subscribed to any categories. Add some above!");
+                                    }
+                                    System.out.println("NEWSUBBED"+ subbedcategories);
+
+                                }
+                            })
+                            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    final Dialog dialog = builder.create();
+
+
+                    dialog.show();
+                }
+
+            });
+        }
+        else {
+            subList.setText("Please sign in to subscribe to categories.");
+            subbutton.setOnClickListener(new View.OnClickListener() {
+
+
+                public void onClick(View view) {
+                    android.support.v7.app.AlertDialog.Builder builder1 = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                    builder1.setMessage("Please sign in to subscribe to categories.");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+
+
+                    android.support.v7.app.AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+
+                }
+
+            });
+
+        }
+    }
+
 
 
 
@@ -121,7 +364,6 @@ public class SettingsFragment extends Fragment implements
                     .addApi(AppIndex.API).build();
         }
 
-
         inbutton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -131,15 +373,6 @@ public class SettingsFragment extends Fragment implements
 
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, 1);
-
-
-                if(mAuth.getCurrentUser() != null){
-                    user.setText(mAuth.getCurrentUser().getDisplayName());
-                }
-                else{
-                    user.setText("Please sign in.");
-                }
-
 
 
 
@@ -152,18 +385,18 @@ public class SettingsFragment extends Fragment implements
 
             public void onClick(View view) {
                 signOut();
+                setSubButtonAction();
                 user.setText("Please sign in.");
+
             }
 
         });
-
 
         
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == 1) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -185,16 +418,12 @@ public class SettingsFragment extends Fragment implements
 
     }
 
-
     void signOut() {
-
         // Firebase sign out
         mAuth.signOut();
         // Google sign out
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-
     }
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d("GoogleActivity", "firebaseAuthWithGoogle: " + acct.getDisplayName());
         Log.d("GoogleActivity", "IDTOKEN: " + acct.getIdToken());
@@ -202,7 +431,6 @@ public class SettingsFragment extends Fragment implements
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
         final Uri u = acct.getPhotoUrl();
-
 
         Log.d("GoogleActivity", "Cred: " + credential);
         mAuth.signInWithCredential(credential)
@@ -213,11 +441,9 @@ public class SettingsFragment extends Fragment implements
                         if(mAuth.getCurrentUser() != null){
 
                             user.setText(mAuth.getCurrentUser().getDisplayName());
-
+                            setSubButtonAction();
                             //Displays profile image in imageview, but broken
                             /*try {
-
-
                                 InputStream stream = getActivity().getContentResolver().openInputStream(u);
                                 BufferedInputStream bufferedInputStream = new BufferedInputStream(stream);
                                 Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
@@ -242,7 +468,6 @@ public class SettingsFragment extends Fragment implements
 
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -257,7 +482,6 @@ public class SettingsFragment extends Fragment implements
         }
 
     }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 

@@ -5,8 +5,8 @@ package sweettooth.cs.brandeis.edu.eventsapp;
  */
 
 /*
-use ExploreFragment now!! (delete this class later)
-
+use ExploreFragment now! (delete this Activity later)
+*/
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -121,4 +121,4 @@ public class Explorer extends AppCompatActivity {
         }
     }
 }
-*/
+
