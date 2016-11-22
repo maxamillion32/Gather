@@ -32,6 +32,7 @@ public class DatabaseUtility {
         Event event = new Event ("Music", 0, dt, "Concert at the Beach", desc);
         String eventID = addEventToDB(event);
 
+
         //unique auto-generated user-id, hardcoded
         String chelsiID = "hFmYEO0pCFf3uWSMzDGLnWdBrqg2";
         //subscribes user to event
@@ -44,6 +45,7 @@ public class DatabaseUtility {
         accessEventIDsFromCategory("Music");
 
     }
+
 
 
 
