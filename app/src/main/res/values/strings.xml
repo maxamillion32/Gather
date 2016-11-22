@@ -1,8 +1,13 @@
 <resources>
-    <string name="app_name">EventsApp</string>
+    <string name="app_name">Gather</string>
     <string name="home">HOME</string>
     <string name="explore">EXPLORE</string>
     <string name="settings">SETTINGS</string>
+
+    <!--
+    remove dialogString and back strings later when Explorer Activity is removed
+    -->
     <string name="dialogString">Dialog</string>
     <string name="back">Go Back to Main Activity</string>
+
 </resources>
