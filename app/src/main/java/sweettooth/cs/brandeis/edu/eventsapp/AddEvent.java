@@ -15,7 +15,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final DatabaseReference databaseRef = database.getReference();
 
     private String title;
     private String description;
@@ -53,8 +59,12 @@ public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnD
                 description = etDescription.getText().toString();
                 category = categories.getSelectedItem().toString();
                 dateTime = new DateTime(year,month,day,hour,minutes);
-                Event newEvent = new Event(category,0,dateTime,description,title);
-                // ADD EVENT TO DATABASE HERE
+                Event event = new Event(category,0,dateTime,description,title);
+                // ADD EVENT TO DATABASE
+                DatabaseReference eventRef = databaseRef.child("Events").push();
+                eventRef.setValue(event);
+                String eventID = eventRef.getKey();
+                databaseRef.child("CategoriesToEvents").child(event.category).setValue(eventID);
                 NavUtils.navigateUpFromSameTask(AddEvent.this);
             }
         });

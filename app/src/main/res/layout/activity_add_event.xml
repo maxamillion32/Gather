@@ -16,8 +16,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/addEvent"
-        android:textSize="18sp"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textSize="22sp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_margin="15sp"/>
 
     <EditText
         android:id="@+id/event_title"
@@ -25,7 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:hint="@string/title"/>
+        android:hint="@string/title"
+        android:layout_margin="10sp"/>
 
     <EditText
         android:id="@+id/event_description"
@@ -33,7 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:hint="@string/description"/>
+        android:hint="@string/description"
+        android:layout_margin="10sp"/>
 
     <TextView
         android:id="@+id/catergory_label"
@@ -47,7 +51,8 @@
         android:id="@+id/event_category"
         android:layout_below="@+id/catergory_label"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="15sp"/>
 
     <TextView
         android:id="@+id/show_date"
@@ -57,7 +62,8 @@
         android:text="@string/emptyDate"
         android:textSize="18sp"
         android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_margin="15sp"/>
 
     <Button
         android:id="@+id/event_date"
@@ -75,7 +81,8 @@
         android:text="@string/emptyTime"
         android:textSize="18sp"
         android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_margin="15sp"/>
 
     <Button
         android:id="@+id/event_time"
