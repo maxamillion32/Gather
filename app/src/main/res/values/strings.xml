@@ -7,6 +7,10 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="save">Save Event</string>
+    <string name="pickDate">Set Date of Event</string>
+    <string name="pickTime">Set Time of Event</string>
+    <string name="emptyDate">__/__/__</string>
+    <string name="emptyTime">__:__ AM/PM</string>
     <string name="categoryLabel">Choose an event category:</string>
 
     <string-array name="categories">

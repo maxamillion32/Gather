@@ -15,7 +15,9 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/addEvent"/>
+        android:text="@string/addEvent"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"/>
 
     <EditText
         android:id="@+id/event_title"
@@ -32,26 +34,14 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:hint="@string/description"/>
-<!--
-    <DatePicker
-        android:id="@+id/event_datepicker"
-        android:layout_below="@+id/event_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TimePicker
-        android:id="@+id/event_timepicker"
-        android:layout_below="@+id/event_datepicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
--->
 
     <TextView
         android:id="@+id/catergory_label"
         android:layout_below="@+id/event_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/categoryLabel"/>
+        android:text="@string/categoryLabel"
+        android:textColor="@color/colorPrimaryDark"/>
 
     <Spinner
         android:id="@+id/event_category"
@@ -59,11 +49,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/show_date"
+        android:layout_below="@+id/event_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/emptyDate"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <Button
+        android:id="@+id/event_date"
+        android:layout_below="@+id/show_date"
+        android:text="@string/pickDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="showDatePickerDialog" />
+
+    <TextView
+        android:id="@+id/show_time"
+        android:layout_below="@+id/event_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/emptyTime"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <Button
+        android:id="@+id/event_time"
+        android:layout_below="@+id/show_time"
+        android:text="@string/pickTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="showTimePickerDialog" />
+
     <Button
         android:id="@+id/save"
-        android:layout_below="@+id/event_category"
+        android:layout_alignParentBottom="true"
         android:text="@string/save"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>
