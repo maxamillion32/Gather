@@ -12,15 +12,15 @@ public class Event implements Comparable<Event> {
     public DateTime dateTime;
     public String description;
     public String title;
+    public String location;
 
-
-
-    public Event(String cat, int chcks, DateTime dt, String d, String t) {
+    public Event(String cat, int chcks, DateTime dt, String d, String t, String loc) {
         category = cat;
         dateTime = dt;
         title = t;
         description = d;
         checks = chcks;
+        location = loc;
     }
 
     public Event() {
@@ -47,6 +47,8 @@ public class Event implements Comparable<Event> {
         this.description = description;
     }
 
+    public void setLocation(String location) { this.location = location; }
+
     public DateTime getDateTime() {
         return dateTime;
     }
@@ -62,6 +64,8 @@ public class Event implements Comparable<Event> {
     public int getChecks() {
         return checks;
     }
+
+    public String getLocation(String location) { return this.location; }
 
     public  void addCheck() {
         checks++;
