@@ -59,12 +59,12 @@ public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnD
                 description = etDescription.getText().toString();
                 category = categories.getSelectedItem().toString();
                 dateTime = new DateTime(year,month,day,hour,minutes);
-                Event event = new Event(category,0,dateTime,description,title);
+                Event event = new Event(category,0,dateTime,description,title, "dummy location");
                 // ADD EVENT TO DATABASE
                 DatabaseReference eventRef = databaseRef.child("Events").push();
                 eventRef.setValue(event);
                 String eventID = eventRef.getKey();
-                databaseRef.child("CategoriesToEvents").child(event.category).setValue(eventID);
+                databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue("true");
                 NavUtils.navigateUpFromSameTask(AddEvent.this);
             }
         });

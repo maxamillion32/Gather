@@ -36,19 +36,38 @@ public class MyEventsHomeTrackerAdapter extends BaseAdapter {
 
     //called iteratively to inflate each log entry and set text fields--reuses view
     public View getView(int index, View view, ViewGroup parent) {
-        if (view == null) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            view = inflater.inflate(R.layout.event_entry_home, parent, false);
-        }
+        if (parent.getId() == R.id.home_gridview) {
+            if (view == null) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                view = inflater.inflate(R.layout.event_entry_home, parent, false);
+            }
 
-        Object data = this.getItem(index);
-        if (data instanceof Event) {
-            Event event = (Event)data;
-            ((TextView) view.findViewById(R.id.event_entry_date_time)).setText(event.getDateTime().formatSimpleDate());
-            ((TextView) view.findViewById(R.id.event_entry_title)).setText(event.getTitle());
-            ((TextView) view.findViewById(R.id.event_entry_category)).setText(event.category);
+            Object data = this.getItem(index);
+            if (data instanceof Event) {
+                Event event = (Event) data;
+                ((TextView) view.findViewById(R.id.event_entry_date_time)).setText(event.getDateTime().formatSimpleDate());
+                ((TextView) view.findViewById(R.id.event_entry_title)).setText(event.getTitle());
+                ((TextView) view.findViewById(R.id.event_entry_category)).setText(event.category);
+            } else {
+                throw new RuntimeException("item should be of type Event");
+            }
         } else {
-            throw new RuntimeException("item should be of type Event");
+            if (view == null) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                view = inflater.inflate(R.layout.event_entry_my_events, parent, false);
+            }
+
+            Object data = this.getItem(index);
+            if (data instanceof Event) {
+                Event event = (Event) data;
+                ((TextView) view.findViewById(R.id.my_events_title)).setText(event.getTitle());
+                ((TextView) view.findViewById(R.id.my_events_datetime)).setText(event.getDateTime().formatSimpleDate());
+                ((TextView) view.findViewById(R.id.my_events_description)).setText(event.getDescription());
+                ((TextView) view.findViewById(R.id.my_events_category)).setText(event.category);
+                ((TextView) view.findViewById(R.id.my_events_location)).setText(event.getLocation());
+            } else {
+                throw new RuntimeException("item should be of type Event");
+            }
         }
         return view;
     }

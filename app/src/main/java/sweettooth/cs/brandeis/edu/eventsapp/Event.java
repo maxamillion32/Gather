@@ -61,14 +61,26 @@ public class Event implements Comparable<Event> {
         return description;
     }
 
+    public String getCategory() { return category; }
+
     public int getChecks() {
         return checks;
     }
 
-    public String getLocation(String location) { return this.location; }
+    public String getLocation() { return this.location; }
 
     public  void addCheck() {
         checks++;
+    }
+
+    public String[] getDetailArray () {
+        String[] eventDetails = new String[5];
+        eventDetails[0] = "Title: " + getTitle();
+        eventDetails[1] = "Time: " + getDateTime().formatSimpleDate();
+        eventDetails[2] = "Description: " + getDescription();
+        eventDetails[3] = "Category: " + getCategory();
+        eventDetails[4] = "Location: " + getLocation();
+        return eventDetails;
     }
 
     public int compareTo(Event otherEvent) {

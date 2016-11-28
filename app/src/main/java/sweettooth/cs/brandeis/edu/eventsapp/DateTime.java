@@ -119,7 +119,7 @@ public class DateTime implements Comparable<DateTime> {
                 month = "DEC";
                 break;
             default:
-                throw new RuntimeException("invalid month");
+                throw new RuntimeException("'" + this.month + "'" + " invalid month");
         }
         return month + " " + this.day + ", " + hourCivilian;
     }

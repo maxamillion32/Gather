@@ -27,22 +27,26 @@ public class DatabaseUtility {
        accesses a user's events, and accesses a category's events*/
     protected void test () {
         //create new event and add to database
-        DateTime dt = new DateTime(2017, 3, 8, 14, 0);
-        String desc = "Donna The Buffalo playing at Crane Beach";
-        Event event = new Event ("Music", 0, dt, "Concert at the Beach", desc);
+        DateTime dt = new DateTime(2016, 12, 17, 7, 0);
+        String category ="Other";
+        String title = "Meditation Retreat";
+        String desc = "All day indoor meditation event with special guest Thich Nhat Hanh";
+        String location = "Cambridge Insight Meditation Center";
+        Event event = new Event (category, 0, dt, desc, title, location);
         String eventID = addEventToDB(event);
 
-
         //unique auto-generated user-id, hardcoded
-        String chelsiID = "hFmYEO0pCFf3uWSMzDGLnWdBrqg2";
+        String chelsiID = "o2JrPnMLYcMoQIB2B55kXzaxdv03";
+        String TylerID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
         //subscribes user to event
         subscribeToEvent(chelsiID, eventID);
+        subscribeToEvent(TylerID, eventID);
 
         //accesses user's subscribed events
-        accessUsersEventIDs(chelsiID);
+        //accessUsersEventIDs(chelsiID);
 
         //accesses a category's events
-        accessEventIDsFromCategory("Music");
+        //accessEventIDsFromCategory("Music");
 
     }
 
@@ -58,13 +62,13 @@ public class DatabaseUtility {
         //unique auto-generated event ID
         String eventID = eventRef.getKey();
         //adds event ID to database under its category
-        databaseRef.child("CategoriesToEvents").child(event.category).setValue(eventID);
+        databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue("true");
         return eventID;
     }
 
     //subscribes user to event
     protected void subscribeToEvent(String userID, String eventID) {
-        databaseRef.child("CategoriesToEvents").child(userID).child(eventID).setValue("true");
+        databaseRef.child("UserToEvents").child(userID).child(eventID).setValue("true");
     }
 
     //Get current user's ID
