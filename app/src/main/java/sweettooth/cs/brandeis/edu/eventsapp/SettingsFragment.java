@@ -75,7 +75,7 @@ public class SettingsFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View settingsFragmentView = inflater.inflate(R.layout.login_screen, container, false);
+        View settingsFragmentView = inflater.inflate(R.layout.fragment_settings, container, false);
 
 
         //Subscribe to catagories code starts here

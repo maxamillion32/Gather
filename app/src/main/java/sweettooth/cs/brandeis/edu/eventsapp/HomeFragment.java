@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
 
     //alternate user IDs
 
-    private static final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    //private static final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     //Chelsi Brandeis
     //private static final String userID = "N4c9T5KP9RTbJk5dwPODdpqTpwC3";
     //myApp
@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment {
     //private static final String userID = "o2JrPnMLYcMoQIB2B55kXzaxdv03";
     //Tyler
 
-    //private static final String userID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
+    private static final String userID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
 
     private static final String logTag = "HomeFragment";
 
