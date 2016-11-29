@@ -6,6 +6,7 @@
     <string name="addEvent">Add Public Event</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="location">Location</string>
     <string name="save">Save Event</string>
     <string name="pickDate">Set Date of Event</string>
     <string name="pickTime">Set Time of Event</string>

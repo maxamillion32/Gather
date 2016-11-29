@@ -26,6 +26,7 @@ public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnD
     private String title;
     private String description;
     private String category;
+    private String location;
     private int year;
     private int month;
     private int day;
@@ -57,9 +58,11 @@ public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnD
                 title = etTitle.getText().toString();
                 EditText etDescription = (EditText) findViewById(R.id.event_description);
                 description = etDescription.getText().toString();
+                EditText etLocation = (EditText) findViewById(R.id.event_location);
+                location = etLocation.getText().toString();
                 category = categories.getSelectedItem().toString();
                 dateTime = new DateTime(year,month,day,hour,minutes);
-                Event event = new Event(category,0,dateTime,description,title, "dummy location");
+                Event event = new Event(category,0,dateTime,description,title,location);
                 // ADD EVENT TO DATABASE
                 DatabaseReference eventRef = databaseRef.child("Events").push();
                 eventRef.setValue(event);
