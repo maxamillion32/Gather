@@ -48,6 +48,17 @@ public class DateTime implements Comparable<DateTime>, Serializable {
         return minute;
     }
 
+    public void setYear(int year) { this.year = year; }
+
+    public void setMonth(int month) { this.month = month; }
+
+    public void setDay(int day) { this.day = day; }
+
+    public void setHour(int hour) { this.hour = hour; }
+
+    public void setMinute(int minute) { this.minute = minute; }
+
+
     //most recent first
     public int compareTo(DateTime otherDateTime) {
         //int year = dateTime.getYear();

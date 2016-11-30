@@ -67,7 +67,7 @@ public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnD
                 DatabaseReference eventRef = databaseRef.child("Events").push();
                 eventRef.setValue(event);
                 String eventID = eventRef.getKey();
-                databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue("true");
+                databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue(true);
                 NavUtils.navigateUpFromSameTask(AddEvent.this);
             }
         });

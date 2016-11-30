@@ -86,6 +86,7 @@ public class HomeFragment extends Fragment {
                                 Bundle savedInstanceState) {
         Log.d(logTag, "In onCreate()");
         super.onCreateView(inflater, container, savedInstanceState);
+
         final View homeFragmentView = inflater.inflate(R.layout.fragment_home, container, false);
 
 
@@ -204,5 +205,6 @@ public class HomeFragment extends Fragment {
         flip.startFlipping();
 
         return homeFragmentView;
+
     }
 }
