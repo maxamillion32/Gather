@@ -1,10 +1,12 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
+import java.io.Serializable;
+
 /**
  * DateTime class
  */
 
-public class DateTime implements Comparable<DateTime> {
+public class DateTime implements Comparable<DateTime>, Serializable {
 
     public int day;
     public int hour;

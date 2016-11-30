@@ -1,11 +1,13 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
 
+import java.io.Serializable;
+
 /**
  * Event object class
  */
 
-public class Event implements Comparable<Event> {
+public class Event implements Comparable<Event>, Serializable {
 
     public String category;
     public int checks;

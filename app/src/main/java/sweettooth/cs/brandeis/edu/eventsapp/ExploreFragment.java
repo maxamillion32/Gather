@@ -1,12 +1,14 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.widget.AdapterView;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -134,18 +136,20 @@ public class ExploreFragment extends Fragment {
                         }
                         //for event list
                         ListView listOfEvents = new ListView(fragAct);
+                        ArrayAdapter arrayAdapter;
                         //only show list of events if the date clicked has events in db
                         if (mapOfEvents.size() == 0) {
                             //no events on date
                             String[] noEvents = new String[1];
                             noEvents[0] = "No events on " + dateDialog;
-                            listOfEvents.setAdapter(new ArrayAdapter<>(fragAct, R.layout.test_event_list, R.id.listTxtView, noEvents));
+                            arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.test_event_list, R.id.listTxtView, noEvents);
                         } else {
                             //list title of each event
                             Object[] titles = mapOfEvents.values().toArray();
                             String[] arrayOfTitles = Arrays.asList(titles).toArray(new String[mapOfEvents.size()]);
-                            listOfEvents.setAdapter(new ArrayAdapter<>(fragAct, R.layout.test_event_list, R.id.listTxtView, arrayOfTitles));
+                            arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.test_event_list, R.id.listTxtView, arrayOfTitles);
                         }
+                        listOfEvents.setAdapter(arrayAdapter);
                         //dialog of events
                         Dialog dialog = new Dialog(fragAct);
                         dialog.setContentView(listOfEvents);

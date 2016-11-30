@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -181,16 +182,13 @@ public class HomeFragment extends Fragment {
         myEventsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
                 Event event = (Event) adapter.getItem(position);
-                String[] eventDetails = event.getDetailArray();
-                ListView listOfEvents = new ListView(fragAct);
-                listOfEvents.setAdapter(new ArrayAdapter<String>(fragAct, R.layout.test_event_list, R.id.listTxtView, eventDetails));
-
-                //dialog of events
-                Dialog dialog = new Dialog(fragAct);
-                dialog.setContentView(listOfEvents);
-                dialog.show();
+                // pull up event activity
+                Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("KEY",event);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 

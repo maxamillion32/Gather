@@ -2,11 +2,13 @@ package sweettooth.cs.brandeis.edu.eventsapp;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -41,11 +43,24 @@ public class MyEventsFragment extends Fragment {
 
         TextView hello = (TextView) myEventsFragmentView.findViewById(R.id.helloevents);
 
-            myEventsListView = (ListView) myEventsFragmentView.findViewById(R.id.my_events_ListView);
-            if (homeTrackerAdapter != null) {
-                myEventsListView.setAdapter(homeTrackerAdapter);
+        myEventsListView = (ListView) myEventsFragmentView.findViewById(R.id.my_events_ListView);
+        if (homeTrackerAdapter != null) {
+            myEventsListView.setAdapter(homeTrackerAdapter);
+        }
+        listSet = true;
+
+        myEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) homeTrackerAdapter.getItem(position);
+                // pull up event activity
+                Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("KEY",event);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
-            listSet = true;
+        });
 
         return myEventsFragmentView;
     }
