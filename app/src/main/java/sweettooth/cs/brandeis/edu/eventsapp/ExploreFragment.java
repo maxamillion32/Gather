@@ -83,7 +83,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onSelectDate(final Date date, View view) {
                 //date toast
-                Toast.makeText(getActivity().getApplicationContext(), dateFormat.format(date), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity().getApplicationContext(), dateFormat.format(date), Toast.LENGTH_SHORT).show();
                 //map for storing each event as <event key, event title>
                 mapOfEvents = new HashMap<>();
                 //clicked date
@@ -159,7 +159,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onChangeMonth(int month, int year) {
                 //month toast
-                Toast.makeText(getActivity().getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity().getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
             }
         };
         // set listener

@@ -13,14 +13,16 @@
         android:id="@+id/event_entry_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_below="@+id/event_entry_date_time" />
 
     <TextView
         android:id="@+id/event_entry_category"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:layout_below="@+id/event_entry_title" />
 
 </RelativeLayout>

@@ -3,6 +3,8 @@
     <string name="home">HOME</string>
     <string name="explore">EXPLORE</string>
     <string name="settings">SETTINGS</string>
+    <string name="myEvents">My Events</string>
+    <string name="discover">Discover!</string>
     <string name="addEvent">Add Public Event</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
