@@ -29,9 +29,9 @@ public class DatabaseUtility {
         //create new event and add to database
         DateTime dt = new DateTime(2016, 12, 17, 7, 0);
         String category ="Other";
-        String title = "Meditation Retreat";
-        String desc = "All day indoor meditation event with special guest Thich Nhat Hanh";
-        String location = "Cambridge Insight Meditation Center";
+        String title = "Test";
+        String desc = "bleh";
+        String location = "bleh bleh";
         Event event = new Event (category, 0, dt, desc, title, location);
         String eventID = addEventToDB(event);
 
@@ -62,7 +62,7 @@ public class DatabaseUtility {
         //unique auto-generated event ID
         String eventID = eventRef.getKey();
         //adds event ID to database under its category
-        databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue("true");
+        databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue(true);
         return eventID;
     }
 

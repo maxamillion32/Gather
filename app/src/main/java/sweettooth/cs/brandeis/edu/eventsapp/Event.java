@@ -75,7 +75,7 @@ public class Event implements Comparable<Event>, Serializable {
         checks++;
     }
 
-    public String[] getDetailArray () {
+    public String[] detailArray () {
         String[] eventDetails = new String[5];
         eventDetails[0] = "Title: " + getTitle();
         eventDetails[1] = "Time: " + getDateTime().formatSimpleDate();
