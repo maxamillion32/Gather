@@ -296,16 +296,16 @@ public class HomeFragment extends Fragment {
                         float currentY = event.getY();
 
                         // Handling left to right screen swap.
-                        if (lastY > currentY) {
+                        if (lastY < currentY) {
 
                             // If there aren't any other children, just break.
                             if (viewFlipper.getDisplayedChild() == 0)
                                 break;
 
                             // Next screen comes in from right.
-                            viewFlipper.setInAnimation(getContext(), R.anim.right_in);
+                            viewFlipper.setInAnimation(getActivity(), R.anim.right_in);
                             // Current screen goes out from left.
-                            viewFlipper.setOutAnimation(getContext(), R.anim.left_out);
+                            viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
 
                             // Display next screen.
 
@@ -316,16 +316,16 @@ public class HomeFragment extends Fragment {
                         }
 
                         // Handling right to left screen swap.
-                        if (lastY < currentY) {
+                        if (lastY > currentY) {
 
                             // If there is a child (to the left), kust break.
                             if (viewFlipper.getDisplayedChild() == 1)
                                 break;
 
                             // Next screen comes in from left.
-                            viewFlipper.setInAnimation(getContext(), R.anim.left_in);
+                            viewFlipper.setInAnimation(getActivity(), R.anim.left_in);
                             // Current screen goes out from right.
-                            viewFlipper.setOutAnimation(getContext(), R.anim.right_out);
+                            viewFlipper.setOutAnimation(getActivity(), R.anim.right_out);
 
 
 

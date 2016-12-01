@@ -29,6 +29,9 @@ public class CompleteEvent extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         event = (Event)getIntent().getSerializableExtra("KEY");
 
+        // determine if event is listed under the user or not
+
+
         title = (TextView)findViewById(R.id.title);
         description = (TextView)findViewById(R.id.description);
         datetime = (TextView)findViewById(R.id.datetime);
