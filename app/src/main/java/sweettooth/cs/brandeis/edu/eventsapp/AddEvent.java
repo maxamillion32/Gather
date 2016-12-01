@@ -67,7 +67,7 @@ public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnD
                 DatabaseReference eventRef = databaseRef.child("Events").push();
                 eventRef.setValue(event);
                 String eventID = eventRef.getKey();
-                databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue("true");
+                databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue(true);
                 NavUtils.navigateUpFromSameTask(AddEvent.this);
             }
         });
@@ -92,7 +92,7 @@ public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnD
 
     public void onDateSet(DatePicker view, int y, int m, int d) {
         year = y;
-        month = m;
+        month = ++m;
         day = d;
         TextView showDate = (TextView) findViewById(R.id.show_date);
         showDate.setText(""+month+"/"+day+"/"+year);
@@ -107,12 +107,16 @@ public class AddEvent extends AppCompatActivity  implements DatePickerDialog.OnD
     public void onTimeSet(TimePicker view, int h, int m) {
         hour = h;
         minutes = m;
+        String min = ""+minutes;
         TextView showTime = (TextView) findViewById(R.id.show_time);
         String time;
+        if (minutes<10) {
+            min = "0"+min;
+        }
         if (hour <= 12) {
-            time = hour + ":" + minutes + " AM";
+            time = hour + ":" + min + " AM";
         } else {
-            time = (hour-12) + ":" + minutes + " PM";
+            time = (hour-12) + ":" + min + " PM";
         }
         showTime.setText(time);
     }

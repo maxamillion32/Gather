@@ -1,10 +1,12 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
+import java.io.Serializable;
+
 /**
  * DateTime class
  */
 
-public class DateTime implements Comparable<DateTime> {
+public class DateTime implements Comparable<DateTime>, Serializable {
 
     public int day;
     public int hour;
@@ -45,6 +47,17 @@ public class DateTime implements Comparable<DateTime> {
     public int getMinute() {
         return minute;
     }
+
+    public void setYear(int year) { this.year = year; }
+
+    public void setMonth(int month) { this.month = month; }
+
+    public void setDay(int day) { this.day = day; }
+
+    public void setHour(int hour) { this.hour = hour; }
+
+    public void setMinute(int minute) { this.minute = minute; }
+
 
     //most recent first
     public int compareTo(DateTime otherDateTime) {
