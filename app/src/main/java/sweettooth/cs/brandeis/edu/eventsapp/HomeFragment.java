@@ -1,42 +1,37 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeSet;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Home Fragment
@@ -67,6 +62,9 @@ public class HomeFragment extends Fragment {
     private static final String userID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
 
     private static final String logTag = "HomeFragment";
+    private ViewFlipper viewFlipper;
+    private float lastY;
+
 
     public HomeFragment() {
     }
@@ -193,18 +191,164 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        ViewFlipper flip = (ViewFlipper) homeFragmentView.findViewById(R.id.discoverFlip);
 
-        TextView event = (TextView) homeFragmentView.findViewById(R.id.event1);
-        TextView event2 = (TextView) homeFragmentView.findViewById(R.id.event1);
 
-        flip.setInAnimation(getActivity(), R.anim.right_enter);
-        flip.setOutAnimation(getActivity(), R.anim.left_out);
 
-        flip.setFlipInterval(3000); //Currently flips by time interval, for testing. Will try to add flip by touch later
-        flip.startFlipping();
+
+
+
+
+        final DatabaseUtility dbUtil = new DatabaseUtility();
+
+
+        final List<TextView> texts = new ArrayList<>();
+        texts.add((TextView) homeFragmentView.findViewById(R.id.event1));
+        texts.add((TextView) homeFragmentView.findViewById(R.id.event2));
+        texts.add((TextView) homeFragmentView.findViewById(R.id.event3));
+        texts.add((TextView) homeFragmentView.findViewById(R.id.event4));
+        texts.add((TextView) homeFragmentView.findViewById(R.id.event5));
+
+        final List<ImageView> images = new ArrayList<>();
+        images.add((ImageView) homeFragmentView.findViewById(R.id.image1));
+        images.add((ImageView) homeFragmentView.findViewById(R.id.image2));
+        images.add((ImageView) homeFragmentView.findViewById(R.id.image3));
+        images.add((ImageView) homeFragmentView.findViewById(R.id.image4));
+        images.add((ImageView) homeFragmentView.findViewById(R.id.image5));
+
+
+
+        //Pull top events from database
+        new AsyncTask<Void, Void, Boolean>() {
+
+            protected Boolean doInBackground(Void... params) {
+                DatabaseReference topEventsRef = databaseRef.child("Events");
+
+                topEventsRef.orderByChild("checks");
+
+                ValueEventListener userEventsListener = new ValueEventListener() {
+                    //called when attached to reference and when node or its children is modified
+                    //dataSnapshot is an object representing database contents
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChildren()) {
+                            Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
+
+                            int i = 0;
+                            for (DataSnapshot child : childSnapshots) {
+
+                                Event event = child.getValue(Event.class);
+                                texts.get(i).setText(event.getTitle() + "\n" + event.getDescription() + "\n" + event.getDateTime().formatSimpleDate());
+                                if(event.getCategory().equals("Business")){
+                                    images.get(i).setImageResource(R.drawable.discoverbuisness);
+                                }
+                                if(event.getCategory().equals("Community")){
+                                    images.get(i).setImageResource(R.drawable.discovercommunity);
+                                }
+                                if(event.getCategory().equals("Music")){
+                                    images.get(i).setImageResource(R.drawable.discovermusic);
+                                }
+                                if(event.getCategory().equals("Other")){
+                                    images.get(i).setImageResource(R.drawable.discoverother);
+                                }
+                                if(event.getCategory().equals("Sports")){
+                                    images.get(i).setImageResource(R.drawable.discoversport);
+                                }
+                                i++;
+                                if(i == 5){
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        //error w/ onDataChange
+                        Log.d("DummyTag", "getUsersEventIDs:onCancelled", databaseError.toException());
+                    }
+                };
+                //attaches listener to reference
+                topEventsRef.addValueEventListener(userEventsListener);
+                return null;
+            }
+        }.execute();
+
+
+
+
+        viewFlipper = (ViewFlipper) homeFragmentView.findViewById(R.id.discoverFlip);
+
+        //viewFlipper.setInAnimation(getActivity(), R.anim.right_in);
+        //viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
+
+        //viewFlipper.setFlipInterval(4000);
+        //viewFlipper.startFlipping();
+
+        viewFlipper.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        lastY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        float currentY = event.getY();
+
+                        // Handling left to right screen swap.
+                        if (lastY > currentY) {
+
+                            // If there aren't any other children, just break.
+                            if (viewFlipper.getDisplayedChild() == 0)
+                                break;
+
+                            // Next screen comes in from right.
+                            viewFlipper.setInAnimation(getContext(), R.anim.right_in);
+                            // Current screen goes out from left.
+                            viewFlipper.setOutAnimation(getContext(), R.anim.left_out);
+
+                            // Display next screen.
+
+                            viewFlipper.showNext();
+
+
+
+                        }
+
+                        // Handling right to left screen swap.
+                        if (lastY < currentY) {
+
+                            // If there is a child (to the left), kust break.
+                            if (viewFlipper.getDisplayedChild() == 1)
+                                break;
+
+                            // Next screen comes in from left.
+                            viewFlipper.setInAnimation(getContext(), R.anim.left_in);
+                            // Current screen goes out from right.
+                            viewFlipper.setOutAnimation(getContext(), R.anim.right_out);
+
+
+
+                            // Display previous screen.
+
+                            viewFlipper.showPrevious();
+
+                        }
+                        break;
+                }
+
+
+
+
+                return true;
+            }
+        });
 
         return homeFragmentView;
 
     }
+
+
+
+
 }

@@ -16,19 +16,24 @@ import java.util.List;
 
 public class Main extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //does basic test of database functionality--perhaps uncomment when we turn in on Tues
-        DatabaseUtility dbUtil = new DatabaseUtility();
+
         //dbUtil.test();
 
         //starts activity to test database functionality--nothing implemented right now
         //startActivity(new Intent("sweettooth.cs.brandeis.edu.eventsapp.DatabaseTester"));
 
         //bottom navigation bar
+
+
+
+
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
 
         bottomBar.setFragmentItems(getFragmentManager(), R.id.fragmentContainer,
@@ -62,4 +67,5 @@ public class Main extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,6 +17,7 @@
         android:gravity="center"
         android:textSize="22sp"
         android:textColor="@color/colorPrimaryDark"
+
         android:layout_margin="15sp"
         android:text="@string/myEvents" />
 
@@ -40,25 +46,29 @@
         android:text="@string/discover" />
 
     <ViewFlipper
-        android:layout_width="match_parent"
-        android:layout_height="100sp"
+        android:layout_width="wrap_content"
         android:layout_alignParentBottom="true"
-        android:id="@+id/discoverFlip" >
+        android:id="@+id/discoverFlip"
+        android:layout_height="wrap_content">
         <FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/framelayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/defaultdiscover" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/discoverbuisness"
+                android:id="@+id/image1"/>
 
             <TextView
                 android:text="Event 1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/event1" />
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/event1"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
         </FrameLayout>
         <FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
@@ -67,15 +77,19 @@
             android:layout_height="match_parent" >
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/defaultdiscover" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/discoverbuisness"
+                android:id="@+id/image2"/>
 
             <TextView
                 android:text="Event 2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/event2" />
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/event2"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
 
 
@@ -86,16 +100,61 @@
             android:layout_height="match_parent" >
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/defaultdiscover" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/discoverbuisness"
+                android:id="@+id/image3"/>
 
             <TextView
                 android:text="Event 3"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/event3"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        </FrameLayout>
+        <FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/framelayout4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/event3" />
+                android:src="@drawable/discoverbuisness"
+                android:id="@+id/image4"/>
+
+            <TextView
+                android:text="Event 4"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/event4"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        </FrameLayout>
+        <FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/framelayout5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/discoverbuisness"
+                android:id="@+id/image5" />
+
+            <TextView
+                android:text="Event 5"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/event5"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
         </FrameLayout>
     </ViewFlipper>
 
-</RelativeLayout>
+
+    </RelativeLayout>

@@ -89,6 +89,7 @@ public class SettingsFragment extends Fragment implements
         user = (TextView) settingsFragmentView.findViewById(R.id.currentUser);
         i = (ImageView) settingsFragmentView.findViewById(R.id.imageView);
 
+
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser() != null){
             user.setText(mAuth.getCurrentUser().getDisplayName());
