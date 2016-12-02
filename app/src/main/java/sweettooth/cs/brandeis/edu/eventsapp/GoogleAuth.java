@@ -62,8 +62,8 @@ public class GoogleAuth extends AppCompatActivity  implements
         setContentView(R.layout.login);
 
 
-        SignInButton inbutton = (SignInButton) findViewById(R.id.sign_in_button);
-        Button outbutton = (Button) findViewById(R.id.sign_out_button);
+        //SignInButton inbutton = (SignInButton) findViewById(R.id.sign_in_button);
+        //Button outbutton = (Button) findViewById(R.id.sign_out_button);
         user = (TextView) findViewById(R.id.currentUser);
 
 
@@ -91,7 +91,7 @@ public class GoogleAuth extends AppCompatActivity  implements
 
 
 
-
+        /*
         inbutton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -136,7 +136,7 @@ public class GoogleAuth extends AppCompatActivity  implements
 
             }
 
-        });
+        });*/
 
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {

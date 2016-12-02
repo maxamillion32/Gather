@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +39,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +59,8 @@ public class SettingsFragment extends Fragment implements
 
     TextView user;
     TextView subList;
-    ImageView i;
     Button subbutton;
-
+    Button inbutton;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -87,14 +89,18 @@ public class SettingsFragment extends Fragment implements
 
         //Google Authentication code starts here
         user = (TextView) settingsFragmentView.findViewById(R.id.currentUser);
-        i = (ImageView) settingsFragmentView.findViewById(R.id.imageView);
+
+
+        inbutton = (Button) settingsFragmentView.findViewById(R.id.signbutton);
 
 
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser() != null){
+            inbutton.setText("Sign Out");
             user.setText(mAuth.getCurrentUser().getDisplayName());
         }
         else{
+            inbutton.setText("Sign In");
             user.setText("Please sign in.");
         }
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -177,7 +183,8 @@ public class SettingsFragment extends Fragment implements
                 }
 
                 if(subbedcategories.size() > 0){
-                    subList.setText("Categories that you are currently subscribed to: " + subbedcategories);
+                    String sub = subbedcategories.toString().substring(1, subbedcategories.toString().length()-1);
+                    subList.setText("Categories currently subscribed to: \n" + sub);
                 }
                 else {
                     subList.setText("You are currently not subscribed to any categories. Add some above!");
@@ -287,7 +294,8 @@ public class SettingsFragment extends Fragment implements
                                     subbedcategories = newsubcategories;
 
                                     if(newsubcategories.size() > 0){
-                                        subList.setText("Categories that you are currently subscribed to: " + newsubcategories);
+                                        String sub = newsubcategories.toString().substring(1, newsubcategories.size()-1);
+                                        subList.setText("Categories currently subscribed to: \n" + sub);
                                     }
                                     else {
                                         subList.setText("You are currently not subscribed to any categories. Add some above!");
@@ -347,8 +355,9 @@ public class SettingsFragment extends Fragment implements
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
-        SignInButton inbutton = (SignInButton) v.findViewById(R.id.sign_in_button);
-        Button outbutton = (Button) v.findViewById(R.id.sign_out_button);
+        inbutton = (Button) v.findViewById(R.id.signbutton);
+
+
         user = (TextView) v.findViewById(R.id.currentUser);
 
 
@@ -368,30 +377,24 @@ public class SettingsFragment extends Fragment implements
         inbutton.setOnClickListener(new View.OnClickListener() {
 
 
-            public void onClick(View view) {
+                public void onClick(View view) {
+                    if(mAuth.getCurrentUser() != null) {
+                        inbutton.setText("Sign In");
+                        signOut();
+                        setSubButtonAction();
+                        user.setText("Please sign in.");
+                    }
+                    else {
 
-                Log.d("BUTTONBUTTONBUTTON", "sign in button click");
-
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, 1);
-
-
-
-            }
-
-        });
-
-        outbutton.setOnClickListener(new View.OnClickListener() {
+                        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                        startActivityForResult(signInIntent, 1);
+                    }
 
 
-            public void onClick(View view) {
-                signOut();
-                setSubButtonAction();
-                user.setText("Please sign in.");
-
-            }
+                }
 
         });
+
 
         
     }
@@ -401,15 +404,12 @@ public class SettingsFragment extends Fragment implements
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == 1) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            Log.d("TESTSUCCESS", "" + result.getSignInAccount());
-            Log.d("TESTGOOGLE", ""+ result);
-            Log.d("TESTSTATUS", "" + result.getStatus());
-            Log.d("TESTSUCCESS", "" + result.isSuccess());
 
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                inbutton.setText("Sign Out");
 
             } else {
                 // Google Sign In failed
@@ -431,7 +431,6 @@ public class SettingsFragment extends Fragment implements
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
-        final Uri u = acct.getPhotoUrl();
 
         Log.d("GoogleActivity", "Cred: " + credential);
         mAuth.signInWithCredential(credential)
@@ -443,16 +442,7 @@ public class SettingsFragment extends Fragment implements
 
                             user.setText(mAuth.getCurrentUser().getDisplayName());
                             setSubButtonAction();
-                            //Displays profile image in imageview, but broken
-                            /*try {
-                                InputStream stream = getActivity().getContentResolver().openInputStream(u);
-                                BufferedInputStream bufferedInputStream = new BufferedInputStream(stream);
-                                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
-                                i.setImageBitmap(bmp);
-                            }catch (IOException e){
 
-                                Log.d("GoogleActivity", "Error setting profile image." + e);
-                            }*/
 
                         }
                         // If sign in fails, display a message to the user. If sign in succeeds

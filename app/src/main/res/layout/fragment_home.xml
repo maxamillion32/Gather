@@ -73,8 +73,8 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/question"
                 android:background="@null"
                 android:id="@+id/button1" />
@@ -102,8 +102,8 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
             <ImageButton
-                android:layout_width="150px"
-                android:layout_height="150px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/question"
                 android:background="@null"
                 android:id="@+id/button2" />
@@ -131,8 +131,8 @@
                 android:id="@+id/event3"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
             <ImageButton
-                android:layout_width="150px"
-                android:layout_height="150px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/question"
                 android:background="@null"
                 android:id="@+id/button3" />
@@ -157,8 +157,8 @@
                 android:id="@+id/event4"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
             <ImageButton
-                android:layout_width="150px"
-                android:layout_height="150px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/question"
                 android:background="@null"
                 android:id="@+id/button4" />
