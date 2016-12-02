@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,6 +16,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CompleteEvent extends AppCompatActivity {
 
@@ -105,6 +109,31 @@ public class CompleteEvent extends AppCompatActivity {
         location.setText(event.getLocation());
         String interest = event.getChecks()+" users are interested in this event!";
         checks.setText(interest);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        interested.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // add event to user
+                if (interested.getText().equals(yesinterested)) {
+                    databaseRef.child("UserToEvents").child(userID).child(eventID).setValue(true);
+                    // increase number of checks
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put("checks", event.getChecks()+1);
+                    databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
+                } else {
+                    // delete event from user
+                    databaseRef.child("UserToEvents").child(userID).child(eventID).removeValue();
+                    // decrease number of checks
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put("checks", event.getChecks()-1);
+                    databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
+                }
+            }
+        });
     }
 
     @Override
