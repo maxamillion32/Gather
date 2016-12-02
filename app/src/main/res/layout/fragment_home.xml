@@ -45,11 +45,13 @@
         android:layout_margin="15sp"
         android:text="@string/discover" />
 
+
     <ViewFlipper
         android:layout_width="wrap_content"
-        android:layout_alignParentBottom="true"
         android:id="@+id/discoverFlip"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
         <FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/framelayout"
             android:layout_width="match_parent"
@@ -69,6 +71,14 @@
                 android:layout_height="match_parent"
                 android:id="@+id/event1"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/question"
+                android:background="@null"
+                android:id="@+id/button1" />
+
 
         </FrameLayout>
         <FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
@@ -90,6 +100,13 @@
                 android:layout_height="match_parent"
                 android:id="@+id/event2"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+            <ImageButton
+                android:layout_width="150px"
+                android:layout_height="150px"
+                android:src="@drawable/question"
+                android:background="@null"
+                android:id="@+id/button2" />
 
 
 
@@ -113,6 +130,12 @@
                 android:layout_height="match_parent"
                 android:id="@+id/event3"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+            <ImageButton
+                android:layout_width="150px"
+                android:layout_height="150px"
+                android:src="@drawable/question"
+                android:background="@null"
+                android:id="@+id/button3" />
         </FrameLayout>
         <FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/framelayout4"
@@ -133,6 +156,12 @@
                 android:layout_height="match_parent"
                 android:id="@+id/event4"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+            <ImageButton
+                android:layout_width="150px"
+                android:layout_height="150px"
+                android:src="@drawable/question"
+                android:background="@null"
+                android:id="@+id/button4" />
         </FrameLayout>
         <FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/framelayout5"
@@ -153,8 +182,15 @@
                 android:layout_height="match_parent"
                 android:id="@+id/event5"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+            <ImageButton
+                android:layout_width="150px"
+                android:layout_height="150px"
+                android:src="@drawable/question"
+                android:background="@null"
+                android:id="@+id/button5" />
         </FrameLayout>
+
     </ViewFlipper>
 
 
-    </RelativeLayout>
+</RelativeLayout>

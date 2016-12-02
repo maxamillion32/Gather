@@ -99,6 +99,7 @@ public class DatabaseUtility {
 
                     int i = 1;
                     for (DataSnapshot child : childSnapshots) {
+
                         Event event = child.getValue(Event.class);
                         events.add(event);
 

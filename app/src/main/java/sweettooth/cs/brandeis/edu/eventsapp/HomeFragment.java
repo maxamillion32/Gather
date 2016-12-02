@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
     final static MyEventsHomeTrackerAdapter adapter = new MyEventsHomeTrackerAdapter();
     protected MyEventsFragment myEventsFrag;
     private static FragmentActivity fragAct;
+    private List<Event> events = new ArrayList<>();
 
     //alternate user IDs
 
@@ -63,7 +65,7 @@ public class HomeFragment extends Fragment {
 
     private static final String logTag = "HomeFragment";
     private ViewFlipper viewFlipper;
-    private float lastY;
+    private float lastX;
 
 
     public HomeFragment() {
@@ -215,6 +217,50 @@ public class HomeFragment extends Fragment {
         images.add((ImageView) homeFragmentView.findViewById(R.id.image4));
         images.add((ImageView) homeFragmentView.findViewById(R.id.image5));
 
+        final List<ImageButton> buttons = new ArrayList<>();
+        buttons.add((ImageButton) homeFragmentView.findViewById(R.id.button1));
+        buttons.add((ImageButton) homeFragmentView.findViewById(R.id.button2));
+        buttons.add((ImageButton) homeFragmentView.findViewById(R.id.button3));
+        buttons.add((ImageButton) homeFragmentView.findViewById(R.id.button4));
+        buttons.add((ImageButton) homeFragmentView.findViewById(R.id.button5));
+
+
+        for(int j = 0; j < 5; j++){
+
+            buttons.get(j).setOnClickListener(new View.OnClickListener() {
+
+
+                public void onClick(View view) {
+                    // pull up event activity
+                    Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
+                    Bundle bundle = new Bundle();
+
+                    switch(view.getId()) {
+                        case R.id.button1:
+                            bundle.putSerializable("KEY", events.get(0));
+                            break;
+                        case R.id.button2:
+                            bundle.putSerializable("KEY", events.get(1));
+                            break;
+                        case R.id.button3:
+                            bundle.putSerializable("KEY", events.get(2));
+                            break;
+                        case R.id.button4:
+                            bundle.putSerializable("KEY", events.get(3));
+                            break;
+                        case R.id.button5:
+                            bundle.putSerializable("KEY", events.get(4));
+                            break;
+                        default:
+                            throw new RuntimeException("Unknow button ID");
+
+                    }
+                    //
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
+        }
 
 
         //Pull top events from database
@@ -233,11 +279,12 @@ public class HomeFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChildren()) {
                             Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
-
                             int i = 0;
+
                             for (DataSnapshot child : childSnapshots) {
 
-                                Event event = child.getValue(Event.class);
+                                Event event= child.getValue(Event.class);
+                                events.add(event);
                                 texts.get(i).setText(event.getTitle() + "\n" + event.getDescription() + "\n" + event.getDateTime().formatSimpleDate());
                                 if(event.getCategory().equals("Business")){
                                     images.get(i).setImageResource(R.drawable.discoverbuisness);
@@ -254,11 +301,17 @@ public class HomeFragment extends Fragment {
                                 if(event.getCategory().equals("Sports")){
                                     images.get(i).setImageResource(R.drawable.discoversport);
                                 }
+
+
+
+
                                 i++;
                                 if(i == 5){
                                     break;
                                 }
                             }
+
+
                         }
                     }
                     @Override
@@ -278,11 +331,11 @@ public class HomeFragment extends Fragment {
 
         viewFlipper = (ViewFlipper) homeFragmentView.findViewById(R.id.discoverFlip);
 
-        //viewFlipper.setInAnimation(getActivity(), R.anim.right_in);
-        //viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
+        viewFlipper.setInAnimation(getActivity(), R.anim.right_in);
+        viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
 
-        //viewFlipper.setFlipInterval(4000);
-        //viewFlipper.startFlipping();
+        viewFlipper.setFlipInterval(8000);
+        viewFlipper.startFlipping();
 
         viewFlipper.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -290,56 +343,40 @@ public class HomeFragment extends Fragment {
                 switch (event.getAction()) {
 
                     case MotionEvent.ACTION_DOWN:
-                        lastY = event.getY();
+                        lastX = event.getX();
                         break;
                     case MotionEvent.ACTION_UP:
-                        float currentY = event.getY();
+                        float currentX = event.getX();
 
                         // Handling left to right screen swap.
-                        if (lastY < currentY) {
+                        if (lastX < currentX) {
 
-                            // If there aren't any other children, just break.
-                            if (viewFlipper.getDisplayedChild() == 0)
-                                break;
 
-                            // Next screen comes in from right.
-                            viewFlipper.setInAnimation(getActivity(), R.anim.right_in);
-                            // Current screen goes out from left.
-                            viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
+
+                            // Next screen comes in from left.
+                            viewFlipper.setInAnimation(getContext(), R.anim.left_in);
+                            // Current screen goes out from right.
+                            viewFlipper.setOutAnimation(getContext(), R.anim.right_out);
 
                             // Display next screen.
-
                             viewFlipper.showNext();
-
-
-
                         }
 
                         // Handling right to left screen swap.
-                        if (lastY > currentY) {
-
-                            // If there is a child (to the left), kust break.
-                            if (viewFlipper.getDisplayedChild() == 1)
-                                break;
-
-                            // Next screen comes in from left.
-                            viewFlipper.setInAnimation(getActivity(), R.anim.left_in);
-                            // Current screen goes out from right.
-                            viewFlipper.setOutAnimation(getActivity(), R.anim.right_out);
+                        if (lastX > currentX) {
 
 
+
+                            // Next screen comes in from right.
+                            viewFlipper.setInAnimation(getContext(), R.anim.right_in);
+                            // Current screen goes out from left.
+                            viewFlipper.setOutAnimation(getContext(), R.anim.left_out);
 
                             // Display previous screen.
-
                             viewFlipper.showPrevious();
-
                         }
                         break;
                 }
-
-
-
-
                 return true;
             }
         });
