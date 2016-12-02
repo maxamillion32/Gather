@@ -4,10 +4,14 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CompleteEvent extends AppCompatActivity {
 
@@ -47,6 +51,31 @@ public class CompleteEvent extends AppCompatActivity {
         // put in an if check to see if user is interested in this event
         // if not, set text to notinterested
         interested.setText(yesinterested);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        interested.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // add event to user
+                if (interested.getText().equals(yesinterested)) {
+                    databaseRef.child("UserToEvents").child(userID).child(eventID).setValue(true);
+                    // increase number of checks
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put("checks", event.getChecks()+1);
+                    databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
+                } else {
+                    // delete event from user
+                    databaseRef.child("UserToEvents").child(userID).child(eventID).removeValue();
+                    // decrease number of checks
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put("checks", event.getChecks()-1);
+                    databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
+                }
+            }
+        });
     }
 
     @Override
