@@ -88,6 +88,10 @@ public class DateTime implements Comparable<DateTime>, Serializable {
         }
     }
 
+    public String formatCalendarDateForMatching () {
+        return this.day + " " + this.month + " " + this.year;
+    }
+
     public String formatSimpleDate() {
         int monthNum = this.month;
         int hourMilitary = this.hour;
