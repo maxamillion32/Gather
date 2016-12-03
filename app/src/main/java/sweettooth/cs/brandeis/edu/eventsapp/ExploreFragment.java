@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.Iterator;
 import java.util.ArrayList;
 import android.content.Intent;
+import android.widget.AdapterView;
 
 /**
  * Explore Fragment
@@ -147,9 +148,41 @@ public class ExploreFragment extends Fragment {
                         }
                         listOfEvents.setAdapter(arrayAdapter);
                         //display dialog list of events
-                        Dialog dialog = new Dialog(fragAct);
+                        final Dialog dialog = new Dialog(fragAct);
                         dialog.setContentView(listOfEvents);
                         dialog.show();
+                        //only start CompleteEvent activity if there is at least one event on the date clicked
+                        if (!mapOfEvents.isEmpty()) {
+                            listOfEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    //text view data clicked as string
+                                    String title = (String) arrayAdapter.getItem(position);
+                                    //only extract title from text view
+                                    String[] toGetTitle = title.split(": ");
+                                    String titleFromTextView = toGetTitle[0];
+                                    //pull up event activity
+                                    Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
+                                    Bundle bundle = new Bundle();
+                                    //find the event that matches the text view clicked
+                                    Set set = mapOfEvents.entrySet();
+                                    Iterator i = set.iterator();
+                                    while (i.hasNext()) {
+                                        Map.Entry entry = (Map.Entry) i.next();
+                                        Event event = (Event) entry.getValue();
+                                        //check if event clicked in the dialog list is the same as the event in the database
+                                        if (event.title.equals(titleFromTextView) && event.dateTime.formatCalendarDateForMatching().equals(dateClickFormatted)) {
+                                            //dismiss dialog to avoid WindowsLeaked exception before starting activity
+                                            dialog.dismiss();
+                                            //start CompleteEvent activity
+                                            bundle.putSerializable("KEY", event);
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                }
+                            });
+                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
