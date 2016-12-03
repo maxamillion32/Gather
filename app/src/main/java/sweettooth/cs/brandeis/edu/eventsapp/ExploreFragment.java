@@ -51,6 +51,8 @@ public class ExploreFragment extends Fragment {
     private static HashMap<String,Event> mapOfEvents;
     //for displaying list of events on date click
     private static ArrayList<String> eventList;
+    //number of days in month
+    private int daysInCurrentMonth;
 
     @Override
     public void onAttach(Activity activity) {
@@ -77,6 +79,10 @@ public class ExploreFragment extends Fragment {
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
             caldroidFragment.setArguments(args);
         }
+
+
+
+
         FragmentManager fragManager = fragAct.getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction trans = fragManager.beginTransaction();
         trans.replace(R.id.calFrag, caldroidFragment);
@@ -193,6 +199,8 @@ public class ExploreFragment extends Fragment {
             public void onChangeMonth(int month, int year) {
                 //month toast
                 Toast.makeText(getActivity().getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
+                //get number of days in month
+                daysInCurrentMonth = getMaxDaysInMonth(month,year);
             }
         };
         // set listener
@@ -207,5 +215,45 @@ public class ExploreFragment extends Fragment {
         if (caldroidFragment != null) {
             caldroidFragment.saveStatesToKey(outState, "CALDROID_SAVED_STATE");
         }
+    }
+
+    //return number of days in month
+    private static int getMaxDaysInMonth(int month, int year) {
+        //dummy value for days
+        int days = 0;
+        //get number of days in the month
+        switch (month) {
+            case 1: days = 31;
+                break;
+            case 2:
+                //account for leap years
+                if (year % 4 == 0) {
+                    days = 29;
+                } else {
+                    days = 28;
+                }
+                break;
+            case 3: days = 31;
+                break;
+            case 4: days = 30;
+                break;
+            case 5: days = 31;
+                break;
+            case 6: days = 30;
+                break;
+            case 7: days = 31;
+                break;
+            case 8: days = 31;
+                break;
+            case 9: days = 30;
+                break;
+            case 10: days = 31;
+                break;
+            case 11: days = 30;
+                break;
+            case 12: days = 31;
+                break;
+        }
+        return days;
     }
 }
