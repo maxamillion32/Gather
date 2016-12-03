@@ -44,7 +44,7 @@ public class Main extends AppCompatActivity {
         );
 
         // Setting colors for different tabs when there's more than three of them.
-        bottomBar.mapColorForTab(0, "#3B494C");
+        bottomBar.mapColorForTab(0, "#61B902");
         bottomBar.mapColorForTab(1, "#00796B");
         bottomBar.mapColorForTab(2, "#7B1FA2");
         bottomBar.mapColorForTab(3, "#FF5252");

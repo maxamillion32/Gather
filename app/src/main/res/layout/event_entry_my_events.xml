@@ -6,8 +6,8 @@
         android:id="@+id/my_events_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="19sp"
-        android:textColor="@color/colorPrimaryDark" />
+        android:textColor="#0fa1d3"
+        android:textSize="19sp" />
 
     <TextView
         android:id="@+id/my_events_datetime_label"
@@ -25,7 +25,6 @@
         android:layout_centerHorizontal="true"
         android:layout_toRightOf="@+id/my_events_datetime_label"
         android:textSize="16sp"
-        android:textColor="@color/black"
         android:layout_below="@id/my_events_title"/>
 
     <TextView
@@ -44,7 +43,6 @@
         android:layout_centerHorizontal="true"
         android:layout_toRightOf="@+id/my_events_description_label"
         android:textSize="16sp"
-        android:textColor="@color/black"
         android:layout_below="@id/my_events_datetime"/>
 
     <TextView
@@ -63,7 +61,6 @@
         android:layout_centerHorizontal="true"
         android:layout_toRightOf="@+id/my_events_category_label"
         android:textSize="16sp"
-        android:textColor="@color/black"
         android:layout_below="@id/my_events_description" />
 
     <TextView
@@ -82,7 +79,6 @@
         android:layout_centerHorizontal="true"
         android:layout_toRightOf="@+id/my_events_location_label"
         android:textSize="16sp"
-        android:textColor="@color/black"
         android:layout_below="@id/my_events_category"/>
 
 </RelativeLayout>

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="20sp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#0fa1d3"
         android:text="@string/myEvents"/>
 
     <ListView
