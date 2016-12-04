@@ -2,6 +2,7 @@ package sweettooth.cs.brandeis.edu.eventsapp;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -32,7 +32,6 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import android.content.Intent;
 import android.widget.AdapterView;
-import android.graphics.drawable.ColorDrawable;
 
 /**
  * Explore Fragment
@@ -59,11 +58,20 @@ public class ExploreFragment extends Fragment {
     //month and year when fragment inflated
     private int inflatedMonth;
     private int inflatedYear;
+    //for avoiding dialog when changing interest data in CompleteEvent activity and returning to calendar
+    private boolean showDialog;
 
     @Override
     public void onAttach(Activity activity) {
         fragAct = (FragmentActivity) activity;
         super.onAttach(activity);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //fixes edge case where data changes in another fragment
+        showDialog = false;
     }
 
     @Override
@@ -91,18 +99,20 @@ public class ExploreFragment extends Fragment {
             //get number of days in month when inflating the explore fragment
             this.daysInCurrentMonth = getMaxDaysInMonth(inflatedMonth,inflatedYear);
         }
+        //avoid inadvertently showing dialog list
+        showDialog = false;
         FragmentManager fragManager = fragAct.getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction trans = fragManager.beginTransaction();
         trans.replace(R.id.calFrag, caldroidFragment);
         trans.commit();
-
         // create listener for selecting dates and changing months
         final CaldroidListener listener = new CaldroidListener() {
             @Override
             public void onSelectDate(final Date date, View view) {
                 //date toast
-                //Toast.makeText(getActivity().getApplicationContext(), dateFormat.format(date), Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(getActivity().getApplicationContext(), dateFormat.format(date), Toast.LENGTH_SHORT).show();
+                //only show dialog if a date was clicked
+                showDialog = true;
                 //map for storing each event as <firebase key string, event object>
                 mapOfEvents = new HashMap<>();
                 //clicked date
@@ -115,6 +125,7 @@ public class ExploreFragment extends Fragment {
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("ExploreFragment", "In onDataChange() in explore fragment");
                         //check each event to see if it matches the date clicked
                         Iterable<DataSnapshot> snaps = dataSnapshot.getChildren();
                         for (DataSnapshot s : snaps) {
@@ -124,84 +135,83 @@ public class ExploreFragment extends Fragment {
                             DataSnapshot childSnapshot = dataSnapshot.child(key);
                             //event object
                             Event event = childSnapshot.getValue(Event.class);
-                            /*
-                            //test prints
-                            System.out.println(event.category);
-                            System.out.println(event.title);
-                            System.out.println("Event Date: " + event.getDateTime().formatCalendarDateForMatching());
-                            System.out.println(dateClickFormatted);
-                            System.out.println(event.checks);
-                            */
                             //check if date clicked matches date in db
                             if (event.getDateTime().formatCalendarDateForMatching().equals(dateClickFormatted)) {
                                 //add event to hash map
                                 mapOfEvents.put(key, event);
                             }
                         }
-                        //for event list
-                        ListView listOfEvents = new ListView(fragAct);
-                        final ArrayAdapter arrayAdapter;
-                        //only show list of events if the date clicked has events in db
-                        if (mapOfEvents.size() == 0) {
-                            //no events on date
-                            String[] noEvents = new String[1];
-                            noEvents[0] = "No events on " + dateDialog;
-                            arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.daily_event_list, R.id.listTxtView, noEvents);
-                        } else {
-                            eventList = new ArrayList<>();
-                            Set set = mapOfEvents.entrySet();
-                            Iterator i = set.iterator();
-                            while (i.hasNext()) {
-                                Map.Entry entry = (Map.Entry) i.next();
-                                Event event = (Event) entry.getValue();
-                                eventList.add(event.checks + " interested: " + event.title);
+                        //check if dialog should show
+                        if (showDialog) {
+                            //becomes true again only when intent returned from completeEvent activity
+                            showDialog = false;
+                            //for event list
+                            ListView listOfEvents = new ListView(fragAct);
+                            final ArrayAdapter arrayAdapter;
+                            //only show list of events if the date clicked has events in db
+                            if (mapOfEvents.size() == 0) {
+                                //no events on date
+                                String[] noEvents = new String[1];
+                                noEvents[0] = "No events on " + dateDialog;
+                                arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.daily_event_list, R.id.listTxtView, noEvents);
+                            } else {
+                                eventList = new ArrayList<>();
+                                Set set = mapOfEvents.entrySet();
+                                Iterator i = set.iterator();
+                                while (i.hasNext()) {
+                                    Map.Entry entry = (Map.Entry) i.next();
+                                    Event event = (Event) entry.getValue();
+                                    eventList.add(event.checks + " interested: " + event.title);
+                                }
+                                //sort event list by most popular
+                                Collections.sort(eventList, Collections.<String>reverseOrder());
+                                //list of event titles
+                                String[] eventListArray = eventList.toArray(new String[eventList.size()]);
+                                arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.daily_event_list, R.id.listTxtView, eventListArray);
                             }
-                            //sort event list by most popular
-                            Collections.sort(eventList, Collections.<String>reverseOrder());
-                            //list of event titles
-                            String[] eventListArray = eventList.toArray(new String[eventList.size()]);
-                            arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.daily_event_list, R.id.listTxtView, eventListArray);
-                        }
-                        listOfEvents.setAdapter(arrayAdapter);
-                        //display dialog list of events
-                        final Dialog dialog = new Dialog(fragAct);
-                        dialog.setContentView(listOfEvents);
-                        dialog.show();
-                        //only start CompleteEvent activity if there is at least one event on the date clicked
-                        if (!mapOfEvents.isEmpty()) {
-                            listOfEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    //text view data clicked as string
-                                    String title = (String) arrayAdapter.getItem(position);
-                                    //only extract title from text view
-                                    String[] toGetTitle = title.split(": ");
-                                    String titleFromTextView = toGetTitle[1];
-                                    //pull up event activity
-                                    Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
-                                    Bundle bundle = new Bundle();
-                                    //find the event that matches the text view clicked
-                                    Set set = mapOfEvents.entrySet();
-                                    Iterator i = set.iterator();
-                                    while (i.hasNext()) {
-                                        Map.Entry entry = (Map.Entry) i.next();
-                                        Event event = (Event) entry.getValue();
-                                        //check if event clicked in the dialog list is the same as the event in the database
-                                        if (event.title.equals(titleFromTextView) && event.dateTime.formatCalendarDateForMatching().equals(dateClickFormatted)) {
-                                            //dismiss dialog to avoid WindowsLeaked exception before starting activity
-                                            dialog.dismiss();
-                                            //start CompleteEvent activity
-                                            bundle.putSerializable("KEY", event);
-                                            intent.putExtras(bundle);
-                                            startActivity(intent);
+                            listOfEvents.setAdapter(arrayAdapter);
+                            //display dialog list of events
+                            final Dialog dialog = new Dialog(fragAct);
+                            dialog.setContentView(listOfEvents);
+                            dialog.show();
+                            //only start CompleteEvent activity if there is at least one event on the date clicked
+                            if (!mapOfEvents.isEmpty()) {
+                                listOfEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        //text view data clicked as string
+                                        String title = (String) arrayAdapter.getItem(position);
+                                        //only extract title from text view
+                                        String[] toGetTitle = title.split(": ");
+                                        String titleFromTextView = toGetTitle[1];
+                                        //pull up event activity
+                                        Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
+                                        Bundle bundle = new Bundle();
+                                        //find the event that matches the text view clicked
+                                        Set set = mapOfEvents.entrySet();
+                                        Iterator i = set.iterator();
+                                        while (i.hasNext()) {
+                                            Map.Entry entry = (Map.Entry) i.next();
+                                            Event event = (Event) entry.getValue();
+                                            //check if event clicked in the dialog list is the same as the event in the database
+                                            if (event.title.equals(titleFromTextView) && event.dateTime.formatCalendarDateForMatching().equals(dateClickFormatted)) {
+                                                //dismiss dialog to avoid WindowsLeaked exception before starting activity
+                                                dialog.dismiss();
+                                                //start CompleteEvent activity and return boolean for showDialog
+                                                bundle.putSerializable("KEY", event);
+                                                intent.putExtras(bundle);
+                                                startActivityForResult(intent,1);
+                                            }
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                        //error
+                        Log.d("ExploreFragment","In onCancelled()", databaseError.toException());
                     }
                 });
             }
@@ -224,6 +234,19 @@ public class ExploreFragment extends Fragment {
         super.onSaveInstanceState(outState);
         if (caldroidFragment != null) {
             caldroidFragment.saveStatesToKey(outState, "CALDROID_SAVED_STATE");
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                //true showDialog boolean will now show dialog after event interest changed
+                //change in event interest will fire onDataChange() and then dialog can once again be shown
+                showDialog = data.getBooleanExtra("showDialog", true);
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Log.d("ExploreFragment", "onActivityResult - RESULT_CANCELLED");
+            }
         }
     }
 

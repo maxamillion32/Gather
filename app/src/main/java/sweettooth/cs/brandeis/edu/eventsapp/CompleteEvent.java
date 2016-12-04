@@ -8,14 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.content.Intent;
+import android.app.Activity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -145,5 +145,20 @@ public class CompleteEvent extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //getCallingActivity null if startActivity was call
+        //getCallingActivity not null if startActivityForResult was call
+        if (getCallingActivity() != null) {
+            Intent intent = new Intent();
+            intent.putExtra("showDialog",true);
+            setResult(Activity.RESULT_OK,intent);
+            finish();
+        } else {
+            //normal
+            super.onBackPressed();
+        }
     }
 }
