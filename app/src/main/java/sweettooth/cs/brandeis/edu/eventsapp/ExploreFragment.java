@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -30,6 +32,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import android.content.Intent;
 import android.widget.AdapterView;
+import android.graphics.drawable.ColorDrawable;
 
 /**
  * Explore Fragment
@@ -53,6 +56,9 @@ public class ExploreFragment extends Fragment {
     private static ArrayList<String> eventList;
     //number of days in month
     private int daysInCurrentMonth;
+    //month and year when fragment inflated
+    private int inflatedMonth;
+    private int inflatedYear;
 
     @Override
     public void onAttach(Activity activity) {
@@ -78,11 +84,13 @@ public class ExploreFragment extends Fragment {
             args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
             caldroidFragment.setArguments(args);
+            //month when inflated
+            this.inflatedMonth = cal.get(Calendar.MONTH)+1;
+            //year when inflated
+            this.inflatedYear = cal.get(Calendar.YEAR);
+            //get number of days in month when inflating the explore fragment
+            this.daysInCurrentMonth = getMaxDaysInMonth(inflatedMonth,inflatedYear);
         }
-
-
-
-
         FragmentManager fragManager = fragAct.getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction trans = fragManager.beginTransaction();
         trans.replace(R.id.calFrag, caldroidFragment);
@@ -146,8 +154,10 @@ public class ExploreFragment extends Fragment {
                             while (i.hasNext()) {
                                 Map.Entry entry = (Map.Entry) i.next();
                                 Event event = (Event) entry.getValue();
-                                eventList.add(event.title + ": " + event.checks + " interested!");
+                                eventList.add(event.checks + " interested: " + event.title);
                             }
+                            //sort event list by most popular
+                            Collections.sort(eventList, Collections.<String>reverseOrder());
                             //list of event titles
                             String[] eventListArray = eventList.toArray(new String[eventList.size()]);
                             arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.daily_event_list, R.id.listTxtView, eventListArray);
@@ -166,7 +176,7 @@ public class ExploreFragment extends Fragment {
                                     String title = (String) arrayAdapter.getItem(position);
                                     //only extract title from text view
                                     String[] toGetTitle = title.split(": ");
-                                    String titleFromTextView = toGetTitle[0];
+                                    String titleFromTextView = toGetTitle[1];
                                     //pull up event activity
                                     Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
                                     Bundle bundle = new Bundle();
@@ -218,7 +228,7 @@ public class ExploreFragment extends Fragment {
     }
 
     //return number of days in month
-    private static int getMaxDaysInMonth(int month, int year) {
+    public static int getMaxDaysInMonth(int month, int year) {
         //dummy value for days
         int days = 0;
         //get number of days in the month
