@@ -354,9 +354,9 @@ public class HomeFragment extends Fragment {
 
 
                             // Next screen comes in from left.
-                            viewFlipper.setInAnimation(getContext(), R.anim.left_in);
+                            viewFlipper.setInAnimation(getActivity(), R.anim.left_in);
                             // Current screen goes out from right.
-                            viewFlipper.setOutAnimation(getContext(), R.anim.right_out);
+                            viewFlipper.setOutAnimation(getActivity(), R.anim.right_out);
 
                             // Display next screen.
                             viewFlipper.showNext();
@@ -368,9 +368,9 @@ public class HomeFragment extends Fragment {
 
 
                             // Next screen comes in from right.
-                            viewFlipper.setInAnimation(getContext(), R.anim.right_in);
+                            viewFlipper.setInAnimation(getActivity(), R.anim.right_in);
                             // Current screen goes out from left.
-                            viewFlipper.setOutAnimation(getContext(), R.anim.left_out);
+                            viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
 
                             // Display previous screen.
                             viewFlipper.showPrevious();
