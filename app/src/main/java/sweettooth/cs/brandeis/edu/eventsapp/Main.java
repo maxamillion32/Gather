@@ -1,6 +1,5 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarFragment;
 
@@ -17,11 +17,24 @@ import java.util.List;
 
 public class Main extends AppCompatActivity {
 
+    //protected static String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    protected static BottomBar bottomBar;
+    protected static boolean enteredWithCredentials = true;
+    protected static HomeFragment homeFrag;
+    protected static MyEventsFragment myEventsFrag;
+    protected static ExploreFragment exploreFrag;
+    protected static SettingsFragment settingsFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        System.out.println("ON CREATE MAIN");
+
+        homeFrag = HomeFragment.newInstance("Content for home.");
+        myEventsFrag = MyEventsFragment.newInstance("Content for my events.");
+        exploreFrag = ExploreFragment.newInstance("Content for explore.");
+        settingsFrag = SettingsFragment.newInstance("Content for settings.");
 
         //does basic test of database functionality--perhaps uncomment when we turn in on Tues
 
@@ -32,16 +45,13 @@ public class Main extends AppCompatActivity {
 
         //bottom navigation bar
 
-
-
-
-        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
+        bottomBar = BottomBar.attach(this, savedInstanceState);
 
         bottomBar.setFragmentItems(getFragmentManager(), R.id.fragmentContainer,
-                new BottomBarFragment(HomeFragment.newInstance("Content for home."), R.drawable.ic_home, "HOME"),
-                new BottomBarFragment(MyEventsFragment.newInstance("Content for my events."), R.drawable.ic_my_events, "MY EVENTS"),
-                new BottomBarFragment(ExploreFragment.newInstance("Content for explore."), R.drawable.ic_explore, "EXPLORE"),
-                new BottomBarFragment(SettingsFragment.newInstance("Content for settings."), R.drawable.ic_settings, "SETTINGS")
+                new BottomBarFragment(homeFrag, R.drawable.ic_home, "HOME"),
+                new BottomBarFragment(myEventsFrag, R.drawable.ic_my_events, "MY EVENTS"),
+                new BottomBarFragment(exploreFrag, R.drawable.ic_explore, "EXPLORE"),
+                new BottomBarFragment(settingsFrag, R.drawable.ic_settings, "SETTINGS")
         );
 
         // Setting colors for different tabs when there's more than three of them.
@@ -49,7 +59,25 @@ public class Main extends AppCompatActivity {
         bottomBar.mapColorForTab(1, "#00796B");
         bottomBar.mapColorForTab(2, "#7B1FA2");
         bottomBar.mapColorForTab(3, "#FF5252");
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            enteredWithCredentials = false;
+            bottomBar.selectTabAtPosition(3, false);
+            bottomBar.hide();
+        }
+
+
     }
+
+    //@Override
+    //public void onResume() {
+      //  super.onResume();
+        //if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            //enteredWithCredentials = false;
+            //bottomBar.selectTabAtPosition(3, true);
+            //bottomBar.hide();
+        //}
+    //}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
