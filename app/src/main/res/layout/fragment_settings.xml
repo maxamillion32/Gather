@@ -48,10 +48,10 @@
         android:text="Gather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
         android:id="@+id/gatherView"
         android:textSize="36sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/currentUser"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp" />
 
 </RelativeLayout>
