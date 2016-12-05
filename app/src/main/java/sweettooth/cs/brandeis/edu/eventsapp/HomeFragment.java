@@ -62,6 +62,8 @@ public class HomeFragment extends Fragment {
 
     private List<Event> events = new ArrayList<>();
 
+    View homeFragmentView;
+
     //alternate user IDs
 
     private static String userID;
@@ -95,7 +97,7 @@ public class HomeFragment extends Fragment {
         Log.d(logTag, "In onCreate()");
         super.onCreateView(inflater, container, savedInstanceState);
 
-        final View homeFragmentView = inflater.inflate(R.layout.fragment_home, container, false);
+        homeFragmentView = inflater.inflate(R.layout.fragment_home, container, false);
         //updates reference to database automatically when database is modified
         databaseRef.keepSynced(true);
 
@@ -295,11 +297,13 @@ public class HomeFragment extends Fragment {
     }
 
     protected void populateGridView() {
+        Log.d(logTag, "In populateGridView()");
 
         final GridView myEventsGridView = this.myEventsGridView;
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         usersEventsRef = databaseRef.child("UserToEvents").child(userID);
 
+        final TextView noEvents = (TextView) homeFragmentView.findViewById(R.id.no_events);
 
         /*listener for changes to a database node (including changes to children) in
           database--will be assigned to userEventsRef*/
@@ -353,6 +357,11 @@ public class HomeFragment extends Fragment {
                                     Log.d(logTag, "Adding event to set...");
                                     usersEvents.add(event);
                                 }
+                                if (usersEvents.size() == 0) {
+                                    System.out.println("NO EVENTS DETECTED");
+                                    noEvents.setText(getResources().getString(R.string.noEvents));
+                                }
+
                                 adapter.populateEventsList(usersEvents);
                                 myEventsGridView.setAdapter(adapter);
                                 Log.d(logTag, "about to set adapter to my events");

@@ -67,6 +67,9 @@ public class SettingsFragment extends Fragment implements
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private String userID;
+    protected final String DUMMY_EVENT_ID = "-KXEB-PUaJz2SHr5qxyF";
+    protected final String DUMMY_CATEGORY = "Placeholder";
+    private boolean wasLoggedOut = false;
 
     public SettingsFragment() {
     }
@@ -86,6 +89,7 @@ public class SettingsFragment extends Fragment implements
         subbutton = (Button) settingsFragmentView.findViewById(R.id.subscribe);
         subList = (TextView) settingsFragmentView.findViewById(R.id.subList);
         if ((userID = getUserID()) == null) {
+            wasLoggedOut = true;
             Main.bottomBar.hide();
             //PERHAPS DON'T DISPLAY ANYTHING REGARDING SUBSCRIBED CATEGORIES,
             //COMPLICATED THOUGH IF USER IS SIGNED IN AND THEN SIGNS OUT
@@ -116,20 +120,19 @@ public class SettingsFragment extends Fragment implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    boolean justLoggedIn = false;
                     String currentUserId = getUserID();
-                    if (userID == null || !userID.equals(currentUserId)) {
+                    //if (userID == null || !userID.equals(currentUserId)) {
+                    if (wasLoggedOut) {
                         System.out.println(userID == null);
                         userID = currentUserId;
-                        justLoggedIn = true;
-                    }
-                    Log.d("GoogleActivity", "onAuthStateChanged:signed_in:" + user.getUid());
-
-                    if (justLoggedIn) {
+                        addNewUserToDB();
                         Main.homeFrag.populateGridView();
                         Main.bottomBar.selectTabAtPosition(0, true);
                         Main.bottomBar.show();
+                        wasLoggedOut = false;
                     }
+                    Log.d("GoogleActivity", "onAuthStateChanged:signed_in:" + user.getUid());
+
                     //startActivity(new Intent("android.intent.action.MAIN"));
                     //System.out.println("should be restarting main");
 
@@ -139,6 +142,7 @@ public class SettingsFragment extends Fragment implements
                     //isLoggedIn = true;
 
                 } else {
+                    wasLoggedOut = true;
                     Main.bottomBar.hide();
                     Log.d("GoogleActivity", "onAuthStateChanged:signed_out");
                 }
@@ -504,5 +508,13 @@ public class SettingsFragment extends Fragment implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    private void addNewUserToDB() {
+        DatabaseReference usersEventsRef = databaseRef.child("UserToEvents").child(userID);
+        usersEventsRef.child(DUMMY_EVENT_ID).setValue(true);
+
+        DatabaseReference usersCategoriesRef = databaseRef.child("UserToCategories").child(userID);
+        usersCategoriesRef.child(DUMMY_CATEGORY).setValue(true);
     }
 }
