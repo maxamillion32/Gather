@@ -10,9 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * MyEvents Fragment
@@ -21,9 +25,13 @@ import android.widget.TextView;
 public class MyEventsFragment extends Fragment {
 
     protected ListView myEventsListView;
-    private View myEventsFragmentView;
+    protected View myEventsFragmentView;
     protected static MyEventsHomeTrackerAdapter homeTrackerAdapter;
     boolean listSet = false;
+    protected TextView noEvents;
+    protected Button exploreBttn;
+    protected boolean viewsReady = false;
+    private DatabaseUtility databaseUtil;
 
     private static final String logTag = "MyEventsFragment";
 
@@ -39,28 +47,23 @@ public class MyEventsFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         Log.d(logTag, "In onCreate()");
+
         myEventsFragmentView = inflater.inflate(R.layout.fragment_my_events, container, false);
 
         TextView hello = (TextView) myEventsFragmentView.findViewById(R.id.helloevents);
 
-        myEventsListView = (ListView) myEventsFragmentView.findViewById(R.id.my_events_ListView);
-        if (homeTrackerAdapter != null) {
-            myEventsListView.setAdapter(homeTrackerAdapter);
-        }
-        listSet = true;
+        noEvents = (TextView) myEventsFragmentView.findViewById(R.id.no_events2);
+        exploreBttn = (Button) myEventsFragmentView.findViewById(R.id.button_to_explore2);
 
-        myEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event = (Event) homeTrackerAdapter.getItem(position);
-                // pull up event activity
-                Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("KEY",event);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+        myEventsListView = (ListView) myEventsFragmentView.findViewById(R.id.my_events_ListView);
+
+        FirebaseUser user;
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            databaseUtil = new DatabaseUtility(userID, myEventsFragmentView, myEventsListView,
+                    this, new MyEventsHomeTrackerAdapter());
+            databaseUtil.accessUserEvents(DatabaseUtility.Tab.MYEVENTS);
+        }
 
         return myEventsFragmentView;
     }

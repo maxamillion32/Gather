@@ -15,7 +15,8 @@
     <string name="emptyDate">__/__/__</string>
     <string name="emptyTime">__:__ AM/PM</string>
     <string name="categoryLabel">Choose an event category:</string>
-    <string name="noEvents">You have no upcoming Events!</string>
+    <string name="noEvents">You have no upcoming Events</string>
+    <string name="toExplore">Click to Explore!</string>
 
     <string-array name="categories">
         <item>Business</item>

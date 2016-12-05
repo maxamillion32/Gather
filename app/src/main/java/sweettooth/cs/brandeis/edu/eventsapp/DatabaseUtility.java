@@ -1,6 +1,16 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
+import android.app.Fragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -11,8 +21,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /* This rudimentaty class tests the functionality of our Firebase Database--performs
 *  very basic database operations. It utilizes JSON database from Firebase account.
@@ -23,213 +38,183 @@ public class DatabaseUtility {
     private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final DatabaseReference databaseRef = database.getReference();
 
-    /* adds a hardcoded event to events, subscribes a user to an event,
-       accesses a user's events, and accesses a category's events*/
-    protected void test () {
-        //create new event and add to database
-        DateTime dt = new DateTime(2016, 12, 17, 7, 0);
-        String category ="Other";
-        String title = "Test";
-        String desc = "bleh";
-        String location = "bleh bleh";
-        Event event = new Event (category, 0, dt, desc, title, location);
-        String eventID = addEventToDB(event);
+    protected enum Tab {HOME, MYEVENTS}
 
-        //unique auto-generated user-id, hardcoded
-        String chelsiID = "o2JrPnMLYcMoQIB2B55kXzaxdv03";
-        String TylerID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
-        //subscribes user to event
-        subscribeToEvent(chelsiID, eventID);
-        subscribeToEvent(TylerID, eventID);
+    ;
+    private final String userID;
+    private final View fragView;
+    private final View subView;
+    private final Fragment frag;
+    private final MyEventsHomeTrackerAdapter adapter;
 
-        //accesses user's subscribed events
-        //accessUsersEventIDs(chelsiID);
-
-        //accesses a category's events
-        //accessEventIDsFromCategory("Music");
-
+    protected DatabaseUtility(String userID, View fragView, View subView, Fragment frag, MyEventsHomeTrackerAdapter adapter) {
+        this.userID = userID;
+        this.fragView = fragView;
+        this.subView = subView;
+        this.frag = frag;
+        this.adapter = adapter;
     }
 
+    protected void accessUserEvents(final Tab tabEnum) {
 
+        Log.d("", "In accessUserEvents()");
+        System.out.println("UID: " + userID);
 
+        //if (tabEnum == Tab.HOME) {
+          //  final GridView myEventsGridView = Main.homeFrag.myEventsGridView;
+        //}
 
-    //adds event to database and returns event ID
-    protected String addEventToDB (Event event) {
-        //creates child of event node and gets reference
-        DatabaseReference eventRef = databaseRef.child("Events").push();
-        //sets child's value
-        eventRef.setValue(event);
-        //unique auto-generated event ID
-        String eventID = eventRef.getKey();
-        //adds event ID to database under its category
-        databaseRef.child("CategoriesToEvents").child(event.category).child(eventID).setValue(true);
-        return eventID;
-    }
+        DatabaseReference usersEventsRef = databaseRef.child("UserToEvents").child(userID);
+        final GridView subViewGrid;
+        final ListView subViewList;
 
-    //subscribes user to event
-    protected void subscribeToEvent(String userID, String eventID) {
-        databaseRef.child("UserToEvents").child(userID).child(eventID).setValue("true");
-    }
+        final TextView noEvents;
+        final Button exploreBttn;
 
-    //Get current user's ID
-    protected String getUserID(){
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if(mAuth != null){
-            return mAuth.getCurrentUser().getUid();
+        if (tabEnum == Tab.HOME) {
+            subViewGrid = (GridView) subView;
+            subViewList = null;
+            exploreBttn = (Button) fragView.findViewById(R.id.button_to_explore);
+            noEvents = (TextView) fragView.findViewById(R.id.no_events);
+        } else if (tabEnum == Tab.MYEVENTS) {
+            subViewList = (ListView) subView;
+            subViewGrid = null;
+            exploreBttn = (Button) fragView.findViewById(R.id.button_to_explore2);
+            noEvents = (TextView) fragView.findViewById(R.id.no_events2);
+        } else {
+            exploreBttn = null;
+            noEvents = null;
+            subViewGrid = null;
+            subViewList = null;
+            throw new RuntimeException("enum must be of HOME or MYEVENTS");
         }
-        else return null;
-    }
 
-    //Gets top j events
-    protected List<Event> getTopEvents(final int j){
-        final List<Event> events = new ArrayList<>();
 
-        DatabaseReference topEventsRef = databaseRef.child("Events");
+        noEvents.setText("");
+        exploreBttn.setVisibility(View.INVISIBLE);
+        exploreBttn.setText("");
 
-        topEventsRef.orderByChild("checks");
-
-        ValueEventListener userEventsListener = new ValueEventListener() {
-            //called when attached to reference and when node or its children is modified
-            //dataSnapshot is an object representing database contents
+        //creates click listener for button
+        View.OnClickListener buttnListener = new View.OnClickListener() {
 
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
-
-                    int i = 1;
-                    for (DataSnapshot child : childSnapshots) {
-
-                        Event event = child.getValue(Event.class);
-                        events.add(event);
-
-                        if(i == j){
-                            break;
-                        }
-                        //HashMap<String, Object> map= (HashMap)child.getValue();
-                        //Log.d("DATA",""+  map.get("title"));
-
-                        //eventIDs.add(child.getKey());
-                    }
-
-
-                    //do something with eventIDs, such as populate list
-                }
-
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //error w/ onDataChange
-                Log.d("DummyTag", "getUsersEventIDs:onCancelled", databaseError.toException());
+            public void onClick(View v) {
+                Main.bottomBar.selectTabAtPosition(2, true);
             }
         };
-        //attaches listener to reference
-        topEventsRef.addValueEventListener(userEventsListener);
-        /*try {
-            while(events.size() == 0){
-                System.out.println("Waiting for data to be pulled...");
-                //Thread.sleep(300);
-            }
-        }catch (Exception e){
 
-        }*/
-        return events;
+        exploreBttn.setOnClickListener(buttnListener);
+        //final MyEventsFragment myEventsFrag = Main.myEventsFrag;
 
-    }
-
-    //accesses user's subsribed events. This code would be better suited in an activity
-    protected void accessUsersEventIDs (String userID) {
-        final List<String> eventIDs = new ArrayList<>();
-        //String userID = user.getUid();
-
-        //reference to user's events
-        DatabaseReference userEventsRef = databaseRef.child("UserToEvents").child(userID);
-
-        //listener for changes to a node in database
+        /*listener for changes to a database node (including changes to children) in
+          database--will be assigned to userEventsRef*/
         ValueEventListener userEventsListener = new ValueEventListener() {
+
             //called when attached to reference and when node or its children is modified
             //dataSnapshot is an object representing database contents
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.d("", "In onDataChange() for user's events");
                 if (dataSnapshot.hasChildren()) {
+
+                    final Date currentDate = new Date();
+
+                    //System.out.println("TOTAL DATE: " + currentDate.toString());
+                    //System.out.println("YEAR: " + currentDate.getYear());
+                    //System.out.println("MONTH: " + currentDate.getMonth());
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(currentDate);
+                    System.out.println(cal.toString());
+                    final DateTime currentDateTime = new DateTime(cal.get(Calendar.YEAR),
+                            cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 0, 0);
+
+                    final Set<String> eventIDs = new HashSet<String>();
+                    final Set<Event> usersEvents = new TreeSet<Event>();
+
+                    //DataSnapshot usersEventIDsSnapshot = dataSnapshot.child("UserToEvents").child(userID);
+                    //Iterable<DataSnapshot> childSnapshots = usersEventIDsSnapshot.getChildren();
                     Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
                     for (DataSnapshot child : childSnapshots) {
                         System.out.println(child.getKey());
                         eventIDs.add(child.getKey());
                     }
-                    //do something with eventIDs, such as populate list
+
+                    DatabaseReference eventsRef = dataSnapshot.getRef().getRoot().child("Events");
+
+                    ValueEventListener eventsListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.d("", "In onDataChange() for all events, within onDataChange() for user's events");
+                            //DataSnapshot eventsSnapshot = dataSnapshot.child("Events");
+                            for (String eventID : eventIDs) {
+                                System.out.println(eventID);
+                                DataSnapshot childSnapshot = dataSnapshot.child(eventID);
+                                Event event = childSnapshot.getValue(Event.class);
+                                System.out.println(event.category);
+                                System.out.println("Event Date: " + event.getDateTime().formatSimpleDate());
+                                System.out.println("Current Date: " + currentDateTime.formatSimpleDate());
+                                if (event.getDateTime().compareTo(currentDateTime) < 0) {
+                                    Log.d("", "Adding event to set...");
+                                    usersEvents.add(event);
+                                }
+                                if (usersEvents.size() == 0) {
+                                    System.out.println("NO EVENTS DETECTED");
+                                    noEvents.setText(frag.getResources().getString(R.string.noEvents));
+                                    exploreBttn.setText(frag.getResources().getString(R.string.toExplore));
+                                    exploreBttn.setVisibility(View.VISIBLE);
+                                }
+
+                                adapter.populateEventsList(usersEvents);
+
+                                if (tabEnum == Tab.HOME) {
+                                    subViewGrid.setAdapter(adapter);
+                                } else {
+                                    subViewList.setAdapter(adapter);
+                                }
+                                //Log.d("", "about to set adapter to my events");
+                                //Log.d("", "ListView adapter should be set!");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d("", "onCancelled : listener for all events, within listener for user's events",
+                                    databaseError.toException());
+                        }
+                    };
+                    eventsRef.addListenerForSingleValueEvent(eventsListener);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //error w/ onDataChange
-                Log.d("DummyTag", "getUsersEventIDs:onCancelled", databaseError.toException());
+                Log.d("", "onCancelled : listener for user's events ", databaseError.toException());
             }
         };
         //attaches listener to reference
-        userEventsRef.addValueEventListener(userEventsListener);
-    }
+        usersEventsRef.addValueEventListener(userEventsListener);
 
-    //accesses event IDs associated with category
-    protected void accessEventIDsFromCategory (String category) {
-        final List<String> eventIDs = new ArrayList<>();
-        DatabaseReference  categoryEventsRef = databaseRef.child(category);
-
-        //listener
-        ValueEventListener categoryEventsListener = new ValueEventListener() {
+        //sets click listener for ListView-entry deleted upon click
+        AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
-                    for (DataSnapshot child : childSnapshots) {
-                        eventIDs.add(child.getKey());
-                    }
-                    //do something with eventIDs, such as display corresponding events
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //error
-                Log.d("DummyTag", "getUsersEventIDs:onCancelled", databaseError.toException());
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Event event = (Event) adapter.getItem(position);
+                // pull up event activity
+                Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("KEY", event);
+                intent.putExtras(bundle);
+                frag.startActivity(intent);
             }
         };
-        categoryEventsRef.addValueEventListener(categoryEventsListener);
+
+        if (tabEnum == Tab.HOME) {
+            subViewGrid.setOnItemClickListener(listener);
+        } else {
+            subViewList.setOnItemClickListener(listener);
+        }
     }
 }
 
-/* Here is example of JSON file so far:
-
-{
-  "CategoriesToEvents" : {
-    "Sports" : "-KWV2yPiqNA4IgAbWUl7"
-  },
-  "Events" : {
-    "-KWV2yPiqNA4IgAbWUl7" : {
-      "category" : "Sports",
-      "checks" : 0,
-      "dateTime" : {
-        "day" : 25,
-        "hour" : 22,
-        "minute" : 30,
-        "month" : 11,
-        "year" : 2016
-      },
-      "description" : "Bruins take on Rangers in the playoffs",
-      "title" : "Bruins Game"
-    }
-  },
-  "Sports" : {
-    "-KWV2yPiqNA4IgAbWUl7" : true
-  },
-  "UserToEvents" : {
-    "hFmYEO0pCFf3uWSMzDGLnWdBrqg2" : {
-      "-KWV2yPiqNA4IgAbWUl7" : true
-    }
-  }
-}
-
- */

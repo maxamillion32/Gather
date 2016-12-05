@@ -30,8 +30,9 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         System.out.println("ON CREATE MAIN");
 
-        homeFrag = HomeFragment.newInstance("Content for home.");
         myEventsFrag = MyEventsFragment.newInstance("Content for my events.");
+        System.out.println("HERE");
+        homeFrag = HomeFragment.newInstance("Content for home.");
         exploreFrag = ExploreFragment.newInstance("Content for explore.");
         settingsFrag = SettingsFragment.newInstance("Content for settings.");
 
@@ -45,10 +46,11 @@ public class Main extends AppCompatActivity {
         //bottom navigation bar
 
         bottomBar = BottomBar.attach(this, savedInstanceState);
+        BottomBarFragment eventsBottomBar = new BottomBarFragment(myEventsFrag, R.drawable.ic_my_events, "MY EVENTS");
 
         bottomBar.setFragmentItems(getFragmentManager(), R.id.fragmentContainer,
                 new BottomBarFragment(homeFrag, R.drawable.ic_home, "HOME"),
-                new BottomBarFragment(myEventsFrag, R.drawable.ic_my_events, "MY EVENTS"),
+                eventsBottomBar,
                 new BottomBarFragment(exploreFrag, R.drawable.ic_explore, "EXPLORE"),
                 new BottomBarFragment(settingsFrag, R.drawable.ic_settings, "SETTINGS")
         );

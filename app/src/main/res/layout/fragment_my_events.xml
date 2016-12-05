@@ -12,6 +12,30 @@
         android:textColor="#0fa1d3"
         android:text="@string/myEvents"/>
 
+    <TextView
+        android:id="@+id/no_events2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:textColor="#7e2650"
+        android:layout_margin="15sp"
+        android:layout_below="@id/helloevents"
+        android:text="" />
+
+    <Button
+        android:id="@+id/button_to_explore2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:layout_below="@id/no_events2"
+        android:visibility="invisible"
+        android:text="" />
+
     <ListView
         android:id="@+id/my_events_ListView"
         android:layout_width="fill_parent"

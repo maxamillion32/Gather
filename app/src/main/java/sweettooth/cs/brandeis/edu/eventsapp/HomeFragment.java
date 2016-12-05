@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,12 +36,19 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Home Fragment
  */
 
 public class HomeFragment extends Fragment {
+
+
+    protected static Lock lock = new ReentrantLock();
+    Condition myEventsBuilt = lock.newCondition();
 
     private static final String logTag = "HomeFragment";
     /*reference to my events fragement--useful since this fragment and my
@@ -56,9 +64,10 @@ public class HomeFragment extends Fragment {
     protected final static MyEventsHomeTrackerAdapter adapter = new MyEventsHomeTrackerAdapter();
 
     //displays events user has indicated interest in
-    private GridView myEventsGridView;
+    protected GridView myEventsGridView;
     //reference to node of database representing user's events interested in
-    private DatabaseReference usersEventsRef;
+    protected DatabaseReference usersEventsRef;
+    private DatabaseUtility databaseUtil;
 
     private List<Event> events = new ArrayList<>();
 
@@ -109,9 +118,13 @@ public class HomeFragment extends Fragment {
 
         myEventsGridView = (GridView) homeFragmentView.findViewById(R.id.home_gridview);
 
+
+
         FirebaseUser user;
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            populateGridView();
+            userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            databaseUtil = new DatabaseUtility(userID, homeFragmentView, myEventsGridView, this, adapter);
+            databaseUtil.accessUserEvents(DatabaseUtility.Tab.HOME);
         }
 
         final List<TextView> texts = new ArrayList<>();
@@ -296,7 +309,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    protected void populateGridView() {
+    /*protected void populateGridView() {
         Log.d(logTag, "In populateGridView()");
 
         final GridView myEventsGridView = this.myEventsGridView;
@@ -304,9 +317,43 @@ public class HomeFragment extends Fragment {
         usersEventsRef = databaseRef.child("UserToEvents").child(userID);
 
         final TextView noEvents = (TextView) homeFragmentView.findViewById(R.id.no_events);
+        final Button exploreBttn = (Button) homeFragmentView.findViewById(R.id.button_to_explore);
+        noEvents.setText("");
+        exploreBttn.setVisibility(View.INVISIBLE);
+        exploreBttn.setText("");
+
+
+
+        //creates click listener for button
+        View.OnClickListener buttnListener = new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Main.bottomBar.selectTabAtPosition(2, true);
+            }
+        };
+
+        exploreBttn.setOnClickListener(buttnListener);
+        final MyEventsFragment myEventsFrag = Main.myEventsFrag;
+
+        lock.lock();
+        try {
+            while (!myEventsFrag.viewsReady) {
+                myEventsBuilt.await();
+            }
+        } catch (InterruptedException e ) {
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            lock.unlock();
+        }
+        myEventsFrag.noEvents.setText("");
+        myEventsFrag.exploreBttn.setVisibility(View.INVISIBLE);
+        myEventsFrag.exploreBttn.setText("");
+        myEventsFrag.exploreBttn.setOnClickListener(buttnListener);
 
         /*listener for changes to a database node (including changes to children) in
-          database--will be assigned to userEventsRef*/
+          database--will be assigned to userEventsRef
         ValueEventListener userEventsListener = new ValueEventListener() {
 
             //called when attached to reference and when node or its children is modified
@@ -360,6 +407,12 @@ public class HomeFragment extends Fragment {
                                 if (usersEvents.size() == 0) {
                                     System.out.println("NO EVENTS DETECTED");
                                     noEvents.setText(getResources().getString(R.string.noEvents));
+                                    exploreBttn.setText(getResources().getString(R.string.toExplore));
+                                    exploreBttn.setVisibility(View.VISIBLE);
+
+                                    myEventsFrag.noEvents.setText(getResources().getString(R.string.noEvents));
+                                    myEventsFrag.exploreBttn.setText(getResources().getString(R.string.toExplore));
+                                    myEventsFrag.exploreBttn.setVisibility(View.VISIBLE);
                                 }
 
                                 adapter.populateEventsList(usersEvents);
@@ -404,6 +457,5 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-    }
-
+    }*/
 }

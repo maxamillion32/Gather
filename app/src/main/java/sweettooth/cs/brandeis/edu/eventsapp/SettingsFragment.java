@@ -66,7 +66,7 @@ public class SettingsFragment extends Fragment implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private String userID;
+    protected String userID;
     protected final String DUMMY_EVENT_ID = "-KXEB-PUaJz2SHr5qxyF";
     protected final String DUMMY_CATEGORY = "Placeholder";
     private boolean wasLoggedOut = false;
@@ -130,17 +130,18 @@ public class SettingsFragment extends Fragment implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    //Main.homeFrag.populateGridView();
                     String currentUserId = getUserID();
                     //if (userID == null || !userID.equals(currentUserId)) {
                     if (wasLoggedOut) {
                         System.out.println(userID == null);
                         userID = currentUserId;
                         addNewUserToDB();
-                        Main.homeFrag.populateGridView();
                         Main.bottomBar.selectTabAtPosition(0, true);
                         Main.bottomBar.show();
                         wasLoggedOut = false;
                     }
+
                     Log.d("GoogleActivity", "onAuthStateChanged:signed_in:" + user.getUid());
 
                     //startActivity(new Intent("android.intent.action.MAIN"));
