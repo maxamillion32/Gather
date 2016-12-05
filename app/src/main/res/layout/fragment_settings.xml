@@ -5,25 +5,6 @@
     android:layout_height="match_parent">
 
     <Button
-        android:text="Subscribe to Categories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/subscribe"
-        android:layout_above="@+id/subList"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp" />
-
-    <TextView
-        android:text="Currently Subscribed:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/subList"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-        android:layout_marginBottom="89dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
         android:text="Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,26 +14,44 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:text="Subscribe to Categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/subscribe"
+        android:layout_below="@+id/signbutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp" />
+
+    <TextView
+        android:text="Currently Subscribed:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/subList"
+        android:layout_below="@+id/subscribe"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="31dp"
+        android:textSize="18sp" />
+
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/currentUser"
-        android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:layout_marginLeft="30dp"
+        android:layout_marginBottom="14dp"
         android:layout_above="@+id/signbutton"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp"
-        android:textSize="22sp" />
+        android:textSize="24sp" />
 
     <TextView
         android:text="Gather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="76dp"
         android:id="@+id/gatherView"
-        android:textSize="36sp" />
+        android:textSize="36sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
