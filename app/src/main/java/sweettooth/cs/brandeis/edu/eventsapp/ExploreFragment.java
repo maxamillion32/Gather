@@ -78,36 +78,9 @@ public class ExploreFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View exploreFragmentView = inflater.inflate(R.layout.fragment_explore, container, false);
-        //date shown for toasts
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-        // caldroid fragment
-        caldroidFragment = new CaldroidFragment();
-        if (savedInstanceState != null) {
-            caldroidFragment.restoreStatesFromKey(savedInstanceState, "CALDROID_SAVED_STATE");
-        } else {
-            Bundle args = new Bundle();
-            Calendar cal = Calendar.getInstance();
-            args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-            args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-            args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
-            args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
-            caldroidFragment.setArguments(args);
-            //month when inflated
-            this.inflatedMonth = cal.get(Calendar.MONTH) + 1;
-            //year when inflated
-            this.inflatedYear = cal.get(Calendar.YEAR);
-            //get number of days in month when inflating the explore fragment
-            this.daysInCurrentMonth = getMaxDaysInMonth(inflatedMonth, inflatedYear);
-        }
-        //avoid inadvertently showing dialog list
-        showDialog = false;
-        FragmentManager fragManager = fragAct.getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction trans = fragManager.beginTransaction();
-        trans.replace(R.id.calFrag, caldroidFragment);
-        trans.commit();
+    public void onCreate(Bundle savedInstanceState) {
+        //needed to override onCreate so that data from firebase populates into hash map before onCreateView for coloring purposes
+        super.onCreate(savedInstanceState);
         //collect events for coloring calendar
         mapForColoring = new HashMap<>();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Events");
@@ -135,7 +108,40 @@ public class ExploreFragment extends Fragment {
                 Log.d("ExploreFragment", "In onCancelled()", databaseError.toException());
             }
         });
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View exploreFragmentView = inflater.inflate(R.layout.fragment_explore, container, false);
+        //date shown for toasts
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        // caldroid fragment
+        System.out.println(mapForColoring);
+        caldroidFragment = new CaldroidFragment();
+        if (savedInstanceState != null) {
+            caldroidFragment.restoreStatesFromKey(savedInstanceState, "CALDROID_SAVED_STATE");
+        } else {
+            Bundle args = new Bundle();
+            Calendar cal = Calendar.getInstance();
+            args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+            args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+            args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
+            args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
+            caldroidFragment.setArguments(args);
+            //month when inflated
+            this.inflatedMonth = cal.get(Calendar.MONTH) + 1;
+            //year when inflated
+            this.inflatedYear = cal.get(Calendar.YEAR);
+            //get number of days in month when inflating the explore fragment
+            this.daysInCurrentMonth = getMaxDaysInMonth(inflatedMonth, inflatedYear);
+        }
+        //avoid inadvertently showing dialog list
+        showDialog = false;
+        FragmentManager fragManager = fragAct.getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction trans = fragManager.beginTransaction();
+        trans.replace(R.id.calFrag, caldroidFragment);
+        trans.commit();
         // create listener for selecting dates and changing months
         final CaldroidListener listener = new CaldroidListener() {
             @Override
@@ -150,7 +156,7 @@ public class ExploreFragment extends Fragment {
                 final String dateClickFormatted = new SimpleDateFormat("d M yyyy").format(date);
                 //date displayed in dialog
                 final String dateDialog = new SimpleDateFormat("MM/dd/yyyy").format(date);
-                //get events from db
+                //get events from firebase again to make sure most recently updated data
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Events");
                 Query query = ref;
                 query.addValueEventListener(new ValueEventListener() {
@@ -171,6 +177,8 @@ public class ExploreFragment extends Fragment {
                                 //add event to hash map
                                 mapOfEvents.put(key, event);
                             }
+                            //keep colors updated
+                            mapForColoring.put(key, event.getDateTime().formatCalendarDateForMatching());
                         }
                         //check if dialog should show
                         if (showDialog) {
