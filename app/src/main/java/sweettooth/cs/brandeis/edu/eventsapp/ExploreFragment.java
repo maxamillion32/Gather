@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import android.content.Intent;
 import android.widget.AdapterView;
+import android.graphics.drawable.ColorDrawable;
 
 /**
  * Explore Fragment
@@ -51,6 +52,8 @@ public class ExploreFragment extends Fragment {
     private FragmentActivity fragAct;
     //for collecting key in firebase mapped to event object
     private static HashMap<String,Event> mapOfEvents;
+    //for coloring calendar
+    private static HashMap<String,String> mapForColoring;
     //for displaying list of events on date click
     private static ArrayList<String> eventList;
     //number of days in month
@@ -87,17 +90,17 @@ public class ExploreFragment extends Fragment {
         } else {
             Bundle args = new Bundle();
             Calendar cal = Calendar.getInstance();
-            args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH)+1);
+            args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
             args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
             args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
             caldroidFragment.setArguments(args);
             //month when inflated
-            this.inflatedMonth = cal.get(Calendar.MONTH)+1;
+            this.inflatedMonth = cal.get(Calendar.MONTH) + 1;
             //year when inflated
             this.inflatedYear = cal.get(Calendar.YEAR);
             //get number of days in month when inflating the explore fragment
-            this.daysInCurrentMonth = getMaxDaysInMonth(inflatedMonth,inflatedYear);
+            this.daysInCurrentMonth = getMaxDaysInMonth(inflatedMonth, inflatedYear);
         }
         //avoid inadvertently showing dialog list
         showDialog = false;
@@ -105,6 +108,34 @@ public class ExploreFragment extends Fragment {
         android.support.v4.app.FragmentTransaction trans = fragManager.beginTransaction();
         trans.replace(R.id.calFrag, caldroidFragment);
         trans.commit();
+        //collect events for coloring calendar
+        mapForColoring = new HashMap<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Events");
+        Query query = ref;
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("ExploreFragment", "In onDataChange() in explore fragment");
+                //put each event into hash map for coloring
+                Iterable<DataSnapshot> snaps = dataSnapshot.getChildren();
+                for (DataSnapshot s : snaps) {
+                    //event key to store in map
+                    String key = s.getKey();
+                    //to get event data
+                    DataSnapshot childSnapshot = dataSnapshot.child(key);
+                    //event object
+                    Event event = childSnapshot.getValue(Event.class);
+                    //add event to hash map
+                    mapForColoring.put(key, event.getDateTime().formatCalendarDateForMatching());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //error
+                Log.d("ExploreFragment", "In onCancelled()", databaseError.toException());
+            }
+        });
+
         // create listener for selecting dates and changing months
         final CaldroidListener listener = new CaldroidListener() {
             @Override
@@ -221,6 +252,20 @@ public class ExploreFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
                 //get number of days in month
                 daysInCurrentMonth = getMaxDaysInMonth(month,year);
+                //blue for calendar cells
+                ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.caldroid_sky_blue));
+                //calendar instance
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.MONTH,month-1);
+                cal.set(Calendar.YEAR,year);
+                for (int i = 1; i <= daysInCurrentMonth; i++) {
+                    //check each day
+                    cal.set(Calendar.DAY_OF_MONTH,i);
+                    if (mapForColoring.containsValue(String.valueOf(i) + " " + month + " " + year)) {
+                        //color day blue since there is an event
+                        caldroidFragment.setBackgroundDrawableForDate(blue, cal.getTime());
+                    }
+                }
             }
         };
         // set listener
