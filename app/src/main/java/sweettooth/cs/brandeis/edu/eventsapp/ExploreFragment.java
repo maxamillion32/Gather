@@ -246,6 +246,9 @@ public class ExploreFragment extends Fragment {
                             final Dialog dialog = new Dialog(fragAct);
                             dialog.setContentView(listOfEvents);
                             dialog.show();
+
+                            System.out.println(mapOfEvents);
+
                             //only start CompleteEvent activity if there is at least one event on the date clicked
                             if (!mapOfEvents.isEmpty()) {
                                 listOfEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -254,7 +257,7 @@ public class ExploreFragment extends Fragment {
                                         //text view data clicked as string
                                         String title = (String) arrayAdapter.getItem(position);
                                         //only extract title from text view
-                                        String[] toGetTitle = title.split(": ");
+                                        String[] toGetTitle = title.split("interested: ");
                                         String titleFromTextView = toGetTitle[1];
                                         //pull up event activity
                                         Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
