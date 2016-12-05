@@ -13,6 +13,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.ArrayList;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 import android.app.Activity;
@@ -26,10 +30,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.ArrayList;
 import android.content.Intent;
 import android.widget.AdapterView;
 import android.graphics.drawable.ColorDrawable;
@@ -53,7 +53,7 @@ public class ExploreFragment extends Fragment {
     //for collecting key in firebase mapped to event object
     private static HashMap<String,Event> mapOfEvents;
     //for coloring calendar
-    private static HashMap<String,String> mapForColoring;
+    private static HashMap<String,Event> mapForColoring;
     //user preferences
     private static ArrayList<String> listOfTruePref;
     //for displaying list of events on date click
@@ -103,7 +103,7 @@ public class ExploreFragment extends Fragment {
                     //event object
                     Event event = childSnapshot.getValue(Event.class);
                     //add event to hash map
-                    mapForColoring.put(key, event.getDateTime().formatCalendarDateForMatching());
+                    mapForColoring.put(key, event);
                 }
             }
             @Override
@@ -171,7 +171,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onSelectDate(final Date date, View view) {
                 //date toast
-                Toast.makeText(getActivity().getApplicationContext(), dateFormat.format(date), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity().getApplicationContext(), dateFormat.format(date), Toast.LENGTH_SHORT).show();
                 //only show dialog if a date was clicked
                 showDialog = true;
                 //map for storing each event as <firebase key string, event object>
@@ -205,7 +205,7 @@ public class ExploreFragment extends Fragment {
                                 }
                             }
                             //keep colors updated
-                            mapForColoring.put(key, event.getDateTime().formatCalendarDateForMatching());
+                            mapForColoring.put(key, event);
                         }
                         //check if dialog should show
                         if (showDialog) {
@@ -290,21 +290,78 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onChangeMonth(int month, int year) {
                 //month toast
-                Toast.makeText(getActivity().getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity().getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
                 //get number of days in month
                 daysInCurrentMonth = getMaxDaysInMonth(month,year);
-                //blue for calendar cells with events and preference
-                ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.caldroid_sky_blue));
-                //calendar instance
+                //for calendar cells with events and preference
+                ColorDrawable lightBlue = new ColorDrawable(getResources().getColor(R.color.caldroid_sky_blue));
+                ColorDrawable red = new ColorDrawable(getResources().getColor(R.color.caldroid_light_red));
+                ColorDrawable darkBlue = new ColorDrawable(getResources().getColor(R.color.caldroid_holo_blue_dark));
+                ColorDrawable fiveFiveFive = new ColorDrawable(getResources().getColor(R.color.caldroid_555));
+                ColorDrawable primary = new ColorDrawable(getResources().getColor(R.color.colorPrimary));
+                //new calendar instance
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.MONTH,month-1);
                 cal.set(Calendar.YEAR,year);
+                //build list of events with Date,Category,Checks
+                Set colorSet = mapForColoring.entrySet();
+                ArrayList<String> colorMe = new ArrayList<>();
+                Iterator itr = colorSet.iterator();
+                while (itr.hasNext()) {
+                    Map.Entry entry = (Map.Entry) itr.next();
+                    Event event = (Event) entry.getValue();
+                    colorMe.add(event.dateTime.getDay() + " " + event.dateTime.getMonth() + " " + event.dateTime.getYear());
+                    colorMe.add(event.getCategory());
+                    colorMe.add(String.valueOf(event.getChecks()));
+                }
+                //each day
                 for (int i = 1; i <= daysInCurrentMonth; i++) {
                     //check each day
                     cal.set(Calendar.DAY_OF_MONTH,i);
-                    if (mapForColoring.containsValue(String.valueOf(i) + " " + month + " " + year)) {
-                        //color day blue since there is an event
-                        caldroidFragment.setBackgroundDrawableForDate(blue, cal.getTime());
+                    //comparing popularity
+                    String popularCat = "";
+                    int popularity = 0;
+                    int counter = 0;
+                    //check if there is an event on the date
+                    if (colorMe.contains(String.valueOf(i) + " " + month + " " + year)) {
+                        //go through list of events and find most popular category
+                        for (int x = 0; x < colorMe.size(); x++) {
+                            //same date?
+                            if (colorMe.get(x).equals(String.valueOf(i) + " " + month + " " + year)) {
+                                //first entry on this date is most popular until a more popular one is found
+                                if (counter == 0) {
+                                    //event category
+                                    popularCat = colorMe.get(x + 1);
+                                    //event checks
+                                    popularity = Integer.parseInt(colorMe.get(x + 2));
+                                    counter++;
+                                } else {
+                                    //check if more popular
+                                    if (Integer.parseInt(colorMe.get(x + 2)) > popularity) {
+                                        //it's more popular!!
+                                        popularCat = colorMe.get(x + 1);
+                                        popularity = Integer.parseInt(colorMe.get(x + 2));
+                                    }
+                                }
+                            }
+                        }
+                        //color event category most popular for that day
+                        if (popularCat.equals("Sports")) {
+                            //color day blue since there is an event
+                            caldroidFragment.setBackgroundDrawableForDate(lightBlue, cal.getTime());
+                        } else if (popularCat.equals("Business")) {
+                            //color day blue since there is an event
+                            caldroidFragment.setBackgroundDrawableForDate(red, cal.getTime());
+                        } else if (popularCat.equals("Other")) {
+                            //color day blue since there is an event
+                            caldroidFragment.setBackgroundDrawableForDate(darkBlue, cal.getTime());
+                        } else if (popularCat.equals("Music")) {
+                            //color day blue since there is an event
+                            caldroidFragment.setBackgroundDrawableForDate(fiveFiveFive, cal.getTime());
+                        } else if (popularCat.equals("Community")) {
+                            //color day blue since there is an event
+                            caldroidFragment.setBackgroundDrawableForDate(primary, cal.getTime());
+                        }
                     }
                 }
             }
