@@ -54,6 +54,7 @@ public class SettingsFragment extends Fragment implements
 
     private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final DatabaseReference databaseRef = database.getReference();
+    public static String userID;
     List<String> allcategories = new ArrayList<>();
     List<String> subbedcategories = new ArrayList<>();
     ArrayList<Integer> itemsSelected  = new ArrayList<>();;
@@ -66,10 +67,12 @@ public class SettingsFragment extends Fragment implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    protected String userID;
+
     protected final String DUMMY_EVENT_ID = "-KXEB-PUaJz2SHr5qxyF";
     protected final String DUMMY_CATEGORY = "Placeholder";
     private boolean wasLoggedOut = false;
+
+
 
     public SettingsFragment() {
     }
@@ -120,6 +123,8 @@ public class SettingsFragment extends Fragment implements
         if(mAuth.getCurrentUser() != null){
             inbutton.setText("Sign Out");
             user.setText(mAuth.getCurrentUser().getDisplayName());
+            userID = getUserID();
+            System.out.println("                 USERID:" + userID);
         }
         else{
             inbutton.setText("Sign In");
@@ -130,18 +135,18 @@ public class SettingsFragment extends Fragment implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    //Main.homeFrag.populateGridView();
-                    String currentUserId = getUserID();
+
                     //if (userID == null || !userID.equals(currentUserId)) {
                     if (wasLoggedOut) {
-                        System.out.println(userID == null);
-                        userID = currentUserId;
+
+                        userID = getUserID();
+                        System.out.println("USERID:" + userID);
                         addNewUserToDB();
+                        Main.homeFrag.populateGridView();
                         Main.bottomBar.selectTabAtPosition(0, true);
                         Main.bottomBar.show();
                         wasLoggedOut = false;
                     }
-
                     Log.d("GoogleActivity", "onAuthStateChanged:signed_in:" + user.getUid());
 
                     //startActivity(new Intent("android.intent.action.MAIN"));
@@ -259,7 +264,7 @@ public class SettingsFragment extends Fragment implements
         return null;
     }
 
-    protected String getUserID(){
+    protected static String getUserID(){
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser() != null){
             //return "WaUzsjdZwcN0og4vTu00JHPhWW32";
