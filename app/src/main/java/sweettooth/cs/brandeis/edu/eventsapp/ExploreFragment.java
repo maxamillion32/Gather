@@ -246,9 +246,6 @@ public class ExploreFragment extends Fragment {
                             final Dialog dialog = new Dialog(fragAct);
                             dialog.setContentView(listOfEvents);
                             dialog.show();
-
-                            System.out.println(mapOfEvents);
-
                             //only start CompleteEvent activity if there is at least one event on the date clicked
                             if (!mapOfEvents.isEmpty()) {
                                 listOfEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {

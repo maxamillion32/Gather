@@ -24,11 +24,4 @@
         <item>Sports</item>
         <item>Other</item>
     </string-array>
-
-    <!--
-    remove dialogString and back strings later when Explorer Activity is removed
-    -->
-    <string name="dialogString">Dialog</string>
-    <string name="back">Go Back to Main Activity</string>
-
 </resources>
