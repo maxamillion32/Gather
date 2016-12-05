@@ -35,6 +35,9 @@ public class Main extends AppCompatActivity {
         exploreFrag = ExploreFragment.newInstance("Content for explore.");
         settingsFrag = SettingsFragment.newInstance("Content for settings.");
 
+        if(SettingsFragment.getUserID() != null){
+            SettingsFragment.userID = SettingsFragment.getUserID();
+        }
         //does basic test of database functionality--perhaps uncomment when we turn in on Tues
 
         //dbUtil.test();
