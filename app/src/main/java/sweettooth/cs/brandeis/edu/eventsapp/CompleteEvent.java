@@ -44,7 +44,6 @@ public class CompleteEvent extends AppCompatActivity {
         setContentView(R.layout.activity_complete_event);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         event = (Event)getIntent().getSerializableExtra("KEY");
-        Log.wtf("CTK","create thing");
 
         // find event ID for this event
         DatabaseReference  allEventsRef = databaseRef.child("Events");
@@ -117,6 +116,7 @@ public class CompleteEvent extends AppCompatActivity {
         interested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int c = event.getChecks();
                 // add event to user
                 if (interested.getText().equals(yesinterested)) {
                     databaseRef.child("UserToEvents").child(userID).child(eventID).setValue(true);
@@ -124,6 +124,7 @@ public class CompleteEvent extends AppCompatActivity {
                     Map<String, Object> childUpdates = new HashMap<>();
                     childUpdates.put("checks", event.getChecks()+1);
                     databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
+                    c++;
                 } else {
                     // delete event from user
                     databaseRef.child("UserToEvents").child(userID).child(eventID).removeValue();
@@ -131,7 +132,10 @@ public class CompleteEvent extends AppCompatActivity {
                     Map<String, Object> childUpdates = new HashMap<>();
                     childUpdates.put("checks", event.getChecks()-1);
                     databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
+                    c--;
                 }
+                String interest = c +" users are interested in this event!";
+                checks.setText(interest);
             }
         });
     }
