@@ -54,6 +54,8 @@ public class ExploreFragment extends Fragment {
     private static HashMap<String,Event> mapOfEvents;
     //for coloring calendar
     private static HashMap<String,Event> mapForColoring;
+    //for preferences
+    private static HashMap<String,String> mapForPref;
     //user preferences
     private static ArrayList<String> listOfTruePref;
     //for displaying list of events on date click
@@ -65,8 +67,6 @@ public class ExploreFragment extends Fragment {
     private int inflatedYear;
     //for avoiding dialog when changing interest data in CompleteEvent activity and returning to calendar
     private boolean showDialog;
-    //hard-coded user key from firebase
-    private static final String userID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
 
     @Override
     public void onAttach(Activity activity) {
@@ -87,6 +87,8 @@ public class ExploreFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //collect events for coloring calendar
         mapForColoring = new HashMap<>();
+        //preferences to dates
+        mapForPref = new HashMap<>();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Events");
         Query query = ref;
         query.addValueEventListener(new ValueEventListener() {
@@ -104,6 +106,7 @@ public class ExploreFragment extends Fragment {
                     Event event = childSnapshot.getValue(Event.class);
                     //add event to hash map
                     mapForColoring.put(key, event);
+                    mapForPref.put(key,event.dateTime.formatCalendarDateForMatching());
                 }
             }
             @Override
@@ -114,7 +117,7 @@ public class ExploreFragment extends Fragment {
         });
         //collect the users preferences
         listOfTruePref = new ArrayList();
-        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("UserToCategories").child(userID);
+        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("UserToCategories").child(SettingsFragment.userID);
         Query query2 = ref2;
         query2.addValueEventListener(new ValueEventListener() {
             @Override
@@ -219,7 +222,7 @@ public class ExploreFragment extends Fragment {
                                 //no events on date or none meeting user preferences
                                 String[] noEvents = new String[1];
                                 //doesn't meet preferences but there are events
-                                if (mapForColoring.containsValue(dateClickFormatted)){
+                                if (mapForPref.containsValue(dateClickFormatted)){
                                     noEvents[0] = "Change preferences to see event(s)";
                                 //no events exist on date
                                 } else {
