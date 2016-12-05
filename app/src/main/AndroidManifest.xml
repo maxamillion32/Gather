@@ -16,14 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- now a fragment and no longer an activity.. remove when Explorer class is removed! -->
-        <activity android:name=".Explorer">
-            <intent-filter>
-                <action android:name="sweettooth.cs.brandeis.edu.eventsapp.Explorer" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".DatabaseTester">
             android:label="Database Tester">
             <intent-filter>
