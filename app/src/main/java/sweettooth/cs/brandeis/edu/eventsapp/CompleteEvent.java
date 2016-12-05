@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.content.Intent;
 import android.app.Activity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +38,7 @@ public class CompleteEvent extends AppCompatActivity {
     private int numChecks;
     private Button interested;
     private String eventID;
-    private String userID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
+    private String userID ="acnlUGqlWwWU4ihfwKBtOouMIZt2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

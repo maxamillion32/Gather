@@ -360,6 +360,8 @@ public class HomeFragment extends Fragment {
                                 if (usersEvents.size() == 0) {
                                     System.out.println("NO EVENTS DETECTED");
                                     noEvents.setText(getResources().getString(R.string.noEvents));
+                                } else {
+                                    noEvents.setText("");
                                 }
 
                                 adapter.populateEventsList(usersEvents);
