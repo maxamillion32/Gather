@@ -34,6 +34,7 @@ public class CompleteEvent extends AppCompatActivity {
     private TextView category;
     private TextView location;
     private TextView checks;
+    private int numChecks;
     private Button interested;
     private String eventID;
     private String userID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
@@ -106,7 +107,8 @@ public class CompleteEvent extends AppCompatActivity {
         datetime.setText(event.getDateTime().formatSimpleDate());
         category.setText(event.getCategory());
         location.setText(event.getLocation());
-        String interest = event.getChecks()+" users are interested in this event!";
+        numChecks = event.getChecks();
+        String interest = numChecks +" users are interested in this event!";
         checks.setText(interest);
     }
 
@@ -116,7 +118,6 @@ public class CompleteEvent extends AppCompatActivity {
         interested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int c = event.getChecks();
                 // add event to user
                 if (interested.getText().equals(yesinterested)) {
                     databaseRef.child("UserToEvents").child(userID).child(eventID).setValue(true);
@@ -124,7 +125,7 @@ public class CompleteEvent extends AppCompatActivity {
                     Map<String, Object> childUpdates = new HashMap<>();
                     childUpdates.put("checks", event.getChecks()+1);
                     databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
-                    c++;
+                    numChecks++;
                 } else {
                     // delete event from user
                     databaseRef.child("UserToEvents").child(userID).child(eventID).removeValue();
@@ -132,9 +133,9 @@ public class CompleteEvent extends AppCompatActivity {
                     Map<String, Object> childUpdates = new HashMap<>();
                     childUpdates.put("checks", event.getChecks()-1);
                     databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
-                    c--;
+                    numChecks--;
                 }
-                String interest = c +" users are interested in this event!";
+                String interest = numChecks +" users are interested in this event!";
                 checks.setText(interest);
             }
         });
