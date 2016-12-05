@@ -135,14 +135,12 @@ public class SettingsFragment extends Fragment implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-
                     //if (userID == null || !userID.equals(currentUserId)) {
                     if (wasLoggedOut) {
-
                         userID = getUserID();
                         System.out.println("USERID:" + userID);
                         addNewUserToDB();
-                        Main.homeFrag.populateGridView();
+                        //Main.homeFrag.populateGridView();
                         Main.bottomBar.selectTabAtPosition(0, true);
                         Main.bottomBar.show();
                         wasLoggedOut = false;
