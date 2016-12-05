@@ -91,10 +91,20 @@ public class SettingsFragment extends Fragment implements
         if ((userID = getUserID()) == null) {
             wasLoggedOut = true;
             Main.bottomBar.hide();
+            subbutton.setVisibility(View.GONE);
+            subList.setVisibility(View.GONE);
             //PERHAPS DON'T DISPLAY ANYTHING REGARDING SUBSCRIBED CATEGORIES,
             //COMPLICATED THOUGH IF USER IS SIGNED IN AND THEN SIGNS OUT
             //System.out.println("NULL USER IN SETTINGS");
+
             //setSubButtonAction();
+
+        }
+        else {
+
+            subbutton.setVisibility(View.VISIBLE);
+            subList.setVisibility(View.VISIBLE);
+            setSubButtonAction();
         }
 
             //Subscribe to catagories code ends here
@@ -326,8 +336,8 @@ public class SettingsFragment extends Fragment implements
                                     subbedcategories = newsubcategories;
 
                                     if(newsubcategories.size() > 0){
-                                        String sub = newsubcategories.toString().substring(1, newsubcategories.size()-1);
-                                        subList.setText("Categories currently subscribed to: \n" + sub);
+                                        //String sub = newsubcategories.toString().substring(1, newsubcategories.size()-1);
+                                        subList.setText("Categories currently subscribed to: \n" + subbedcategories);
                                     }
                                     else {
                                         subList.setText("You are currently not subscribed to any categories. Add some above!");
@@ -443,6 +453,7 @@ public class SettingsFragment extends Fragment implements
                 firebaseAuthWithGoogle(account);
                 inbutton.setText("Sign Out");
 
+
             } else {
                 // Google Sign In failed
             }
@@ -456,6 +467,8 @@ public class SettingsFragment extends Fragment implements
         mAuth.signOut();
         // Google sign out
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        subbutton.setVisibility(View.GONE);
+        subList.setVisibility(View.GONE);
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d("GoogleActivity", "firebaseAuthWithGoogle: " + acct.getDisplayName());
@@ -474,6 +487,8 @@ public class SettingsFragment extends Fragment implements
 
                             user.setText(mAuth.getCurrentUser().getDisplayName());
                             setSubButtonAction();
+
+
 
 
                         }
@@ -515,6 +530,6 @@ public class SettingsFragment extends Fragment implements
         usersEventsRef.child(DUMMY_EVENT_ID).setValue(true);
 
         DatabaseReference usersCategoriesRef = databaseRef.child("UserToCategories").child(userID);
-        usersCategoriesRef.child(DUMMY_CATEGORY).setValue(true);
+        //usersCategoriesRef.child(DUMMY_CATEGORY).setValue(true);
     }
 }

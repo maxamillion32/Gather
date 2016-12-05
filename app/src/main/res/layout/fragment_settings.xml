@@ -4,16 +4,34 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:text="Subscribe to Categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/subscribe"
+        android:layout_above="@+id/subList"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currentUser"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:layout_marginLeft="30dp"
+        android:layout_above="@+id/signbutton"
+        android:layout_centerHorizontal="true" />
+
     <TextView
         android:text="Currently Subscribed:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
         android:id="@+id/subList"
-        android:layout_below="@+id/subscribe"
-        android:layout_alignLeft="@+id/subscribe"
-        android:layout_alignStart="@+id/subscribe"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_marginBottom="89dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Button"
@@ -21,30 +39,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/signbutton"
         android:background="@drawable/common_google_signin_btn_text_light"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="28dp"
         android:textColor="@color/black"
-        android:layout_marginBottom="39dp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/currentUser"
-        android:textAppearance="@android:style/TextAppearance.Material.Large"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="33dp"
-        android:layout_above="@+id/signbutton"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:text="Subscribe to Categories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:id="@+id/subscribe"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/signbutton" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
