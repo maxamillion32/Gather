@@ -66,7 +66,7 @@ public class SettingsFragment extends Fragment implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private boolean isLoggedIn = false;
+    private String userID;
 
     public SettingsFragment() {
     }
@@ -85,16 +85,13 @@ public class SettingsFragment extends Fragment implements
         //Subscribe to catagories code starts here
         subbutton = (Button) settingsFragmentView.findViewById(R.id.subscribe);
         subList = (TextView) settingsFragmentView.findViewById(R.id.subList);
-        if (getUserID() == null) {
+        if ((userID = getUserID()) == null) {
             Main.bottomBar.hide();
             //PERHAPS DON'T DISPLAY ANYTHING REGARDING SUBSCRIBED CATEGORIES,
             //COMPLICATED THOUGH IF USER IS SIGNED IN AND THEN SIGNS OUT
             //System.out.println("NULL USER IN SETTINGS");
             //setSubButtonAction();
-        } else {
-            isLoggedIn = true;
         }
-
 
             //Subscribe to catagories code ends here
 
@@ -119,19 +116,28 @@ public class SettingsFragment extends Fragment implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Log.d("GoogleActivity", "onAuthStateChanged:signed_in:" + user.getUid());
-                    Main.bottomBar.show();
-                    if (!Main.enteredWithCredentials && !isLoggedIn) {
-                        Main.homeFrag.populateGridView();
-                        Main.bottomBar.selectTabAtPosition(0, false);
-                        //startActivity(new Intent("android.intent.action.MAIN"));
-                        //System.out.println("should be restarting main");
-
-                        //Main.bottomBar.show();
-                        //Main.bottomBar.setDefaultTabPosition(0);
-                        //Main.bottomBar.selectTabAtPosition(0, false);
-                        //isLoggedIn = true;
+                    boolean justLoggedIn = false;
+                    String currentUserId = getUserID();
+                    if (userID == null || !userID.equals(currentUserId)) {
+                        System.out.println(userID == null);
+                        userID = currentUserId;
+                        justLoggedIn = true;
                     }
+                    Log.d("GoogleActivity", "onAuthStateChanged:signed_in:" + user.getUid());
+
+                    if (justLoggedIn) {
+                        Main.homeFrag.populateGridView();
+                        Main.bottomBar.selectTabAtPosition(0, true);
+                        Main.bottomBar.show();
+                    }
+                    //startActivity(new Intent("android.intent.action.MAIN"));
+                    //System.out.println("should be restarting main");
+
+                    //Main.bottomBar.show();
+                    //Main.bottomBar.setDefaultTabPosition(0);
+                    //Main.bottomBar.selectTabAtPosition(0, false);
+                    //isLoggedIn = true;
+
                 } else {
                     Main.bottomBar.hide();
                     Log.d("GoogleActivity", "onAuthStateChanged:signed_out");

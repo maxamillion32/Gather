@@ -19,7 +19,6 @@ public class Main extends AppCompatActivity {
 
     //protected static String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     protected static BottomBar bottomBar;
-    protected static boolean enteredWithCredentials = true;
     protected static HomeFragment homeFrag;
     protected static MyEventsFragment myEventsFrag;
     protected static ExploreFragment exploreFrag;
@@ -61,7 +60,6 @@ public class Main extends AppCompatActivity {
         bottomBar.mapColorForTab(3, "#FF5252");
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            enteredWithCredentials = false;
             bottomBar.selectTabAtPosition(3, false);
             bottomBar.hide();
         }
