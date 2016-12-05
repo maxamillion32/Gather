@@ -14,16 +14,6 @@
         android:layout_marginBottom="17dp" />
 
     <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/currentUser"
-        android:textAppearance="@android:style/TextAppearance.Material.Large"
-        android:layout_marginLeft="30dp"
-        android:layout_above="@+id/signbutton"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
         android:text="Currently Subscribed:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,5 +32,27 @@
         android:textColor="@color/black"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currentUser"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:layout_marginLeft="30dp"
+        android:layout_above="@+id/signbutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:textSize="22sp" />
+
+    <TextView
+        android:text="Gather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="76dp"
+        android:id="@+id/gatherView"
+        android:textSize="36sp" />
 
 </RelativeLayout>
