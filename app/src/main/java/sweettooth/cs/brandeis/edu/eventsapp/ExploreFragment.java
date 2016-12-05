@@ -54,6 +54,8 @@ public class ExploreFragment extends Fragment {
     private static HashMap<String,Event> mapOfEvents;
     //for coloring calendar
     private static HashMap<String,String> mapForColoring;
+    //user preferences
+    private static ArrayList<String> listOfTruePref;
     //for displaying list of events on date click
     private static ArrayList<String> eventList;
     //number of days in month
@@ -63,6 +65,8 @@ public class ExploreFragment extends Fragment {
     private int inflatedYear;
     //for avoiding dialog when changing interest data in CompleteEvent activity and returning to calendar
     private boolean showDialog;
+    //hard-coded user key from firebase
+    private static final String userID = "WYAaQnXSh0dnVohaz2jVH1PTNcC2";
 
     @Override
     public void onAttach(Activity activity) {
@@ -88,7 +92,7 @@ public class ExploreFragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("ExploreFragment", "In onDataChange() in explore fragment");
+                Log.d("ExploreFragment", "In onDataChange() in explore fragment getting dates");
                 //put each event into hash map for coloring
                 Iterable<DataSnapshot> snaps = dataSnapshot.getChildren();
                 for (DataSnapshot s : snaps) {
@@ -108,6 +112,27 @@ public class ExploreFragment extends Fragment {
                 Log.d("ExploreFragment", "In onCancelled()", databaseError.toException());
             }
         });
+        //collect the users preferences
+        listOfTruePref = new ArrayList();
+        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("UserToCategories").child(userID);
+        Query query2 = ref2;
+        query2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("ExploreFragment", "In onDataChange() in explore fragment getting user preferences");
+                //add user preferences to list
+                Iterable<DataSnapshot> snaps = dataSnapshot.getChildren();
+                for (DataSnapshot s : snaps) {
+                    //all preferences in firebase db are true
+                    listOfTruePref.add(s.getKey());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //error
+                Log.d("ExploreFragment", "In onCancelled()", databaseError.toException());
+            }
+        });
     }
 
     @Override
@@ -117,7 +142,6 @@ public class ExploreFragment extends Fragment {
         //date shown for toasts
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
         // caldroid fragment
-        System.out.println(mapForColoring);
         caldroidFragment = new CaldroidFragment();
         if (savedInstanceState != null) {
             caldroidFragment.restoreStatesFromKey(savedInstanceState, "CALDROID_SAVED_STATE");
@@ -162,7 +186,7 @@ public class ExploreFragment extends Fragment {
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d("ExploreFragment", "In onDataChange() in explore fragment");
+                        Log.d("ExploreFragment", "In onDataChange() in explore fragment after onClick");
                         //check each event to see if it matches the date clicked
                         Iterable<DataSnapshot> snaps = dataSnapshot.getChildren();
                         for (DataSnapshot s : snaps) {
@@ -174,8 +198,11 @@ public class ExploreFragment extends Fragment {
                             Event event = childSnapshot.getValue(Event.class);
                             //check if date clicked matches date in db
                             if (event.getDateTime().formatCalendarDateForMatching().equals(dateClickFormatted)) {
-                                //add event to hash map
-                                mapOfEvents.put(key, event);
+                                //check if users preferences allow to be shown
+                                if (listOfTruePref.contains(event.getCategory())) {
+                                    //add event to hash map
+                                    mapOfEvents.put(key, event);
+                                }
                             }
                             //keep colors updated
                             mapForColoring.put(key, event.getDateTime().formatCalendarDateForMatching());
@@ -189,9 +216,15 @@ public class ExploreFragment extends Fragment {
                             final ArrayAdapter arrayAdapter;
                             //only show list of events if the date clicked has events in db
                             if (mapOfEvents.size() == 0) {
-                                //no events on date
+                                //no events on date or none meeting user preferences
                                 String[] noEvents = new String[1];
-                                noEvents[0] = "No events on " + dateDialog;
+                                //doesn't meet preferences but there are events
+                                if (mapForColoring.containsValue(dateClickFormatted)){
+                                    noEvents[0] = "Change preferences to see event(s)";
+                                //no events exist on date
+                                } else {
+                                    noEvents[0] = "No events on " + dateDialog;
+                                }
                                 arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.daily_event_list, R.id.listTxtView, noEvents);
                             } else {
                                 eventList = new ArrayList<>();
@@ -260,7 +293,7 @@ public class ExploreFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(),month+"/"+year, Toast.LENGTH_SHORT).show();
                 //get number of days in month
                 daysInCurrentMonth = getMaxDaysInMonth(month,year);
-                //blue for calendar cells
+                //blue for calendar cells with events and preference
                 ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.caldroid_sky_blue));
                 //calendar instance
                 Calendar cal = Calendar.getInstance();
