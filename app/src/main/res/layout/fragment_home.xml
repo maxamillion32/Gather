@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:gravity="center"
         android:textSize="22sp"
-        android:textColor="#0fa1d3"
+        android:textColor="#0000e6"
 
         android:layout_margin="15sp"
         android:text="@string/myEvents" />
@@ -40,30 +40,31 @@
         android:visibility="invisible"
         android:text="" />
 
+    <TextView
+        android:id="@+id/hellohome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_above="@+id/discoverFlip"
+        android:gravity="bottom"
+        android:textSize="22sp"
+        android:textColor="#0000e6"
+        android:layout_margin="0sp"
+        android:text="@string/discover" />
+
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/home_gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:numColumns="3"
-        android:verticalSpacing="20dp"
+        android:verticalSpacing="45dp"
         android:horizontalSpacing="20dp"
         android:stretchMode="columnWidth"
         android:gravity="center"
         android:layout_marginBottom="25dp"
         android:layout_below="@id/myevents"
+        android:layout_above="@id/hellohome"
         />
-
-    <TextView
-        android:id="@+id/hellohome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/discoverFlip"
-        android:gravity="center"
-        android:textSize="22sp"
-        android:textColor="#0fa1d3"
-        android:layout_margin="15sp"
-        android:text="@string/discover" />
-
 
     <ViewFlipper
         android:layout_width="wrap_content"

@@ -142,6 +142,7 @@ public class ExploreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View exploreFragmentView = inflater.inflate(R.layout.fragment_explore, container, false);
+
         //date shown for toasts
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
         // caldroid fragment

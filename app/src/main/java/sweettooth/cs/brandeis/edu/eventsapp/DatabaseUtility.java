@@ -112,6 +112,9 @@ public class DatabaseUtility {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                noEvents.setVisibility(View.GONE);
+                exploreBttn.setVisibility(View.GONE);
+
                 Log.d(logTag, "In onDataChange() for user's events");
                 if (dataSnapshot.hasChildren()) {
 
