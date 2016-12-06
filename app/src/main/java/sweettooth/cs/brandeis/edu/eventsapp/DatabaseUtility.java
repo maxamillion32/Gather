@@ -158,16 +158,6 @@ public class DatabaseUtility {
                                     Log.d("", "Adding event to set...");
                                     usersEvents.add(event);
                                 }
-                                if (usersEvents.size() == 0) {
-                                    System.out.println("NO EVENTS DETECTED");
-                                    noEvents.setText(frag.getResources().getString(R.string.noEvents));
-                                    exploreBttn.setText(frag.getResources().getString(R.string.toExplore));
-                                    exploreBttn.setVisibility(View.VISIBLE);
-                                } else {
-                                    noEvents.setVisibility(View.GONE);
-                                    exploreBttn.setVisibility(View.GONE);
-                                }
-
                                 adapter.populateEventsList(usersEvents);
 
                                 if (tabEnum == Tab.HOME) {
@@ -177,6 +167,16 @@ public class DatabaseUtility {
                                 }
                                 //Log.d("", "about to set adapter to my events");
                                 //Log.d("", "ListView adapter should be set!");
+                            }
+                            if (usersEvents.size() == 0) {
+                                Log.wtf("CTK", ""+usersEvents.size());
+                                System.out.println("NO EVENTS DETECTED");
+                                noEvents.setText(frag.getResources().getString(R.string.noEvents));
+                                exploreBttn.setText(frag.getResources().getString(R.string.toExplore));
+                                exploreBttn.setVisibility(View.VISIBLE);
+                            } else {
+                                noEvents.setVisibility(View.GONE);
+                                exploreBttn.setVisibility(View.GONE);
                             }
                         }
 
