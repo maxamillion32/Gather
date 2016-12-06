@@ -160,8 +160,8 @@ public class DatabaseUtility {
                                 }
                                 if (usersEvents.size() == 0) {
                                     System.out.println("NO EVENTS DETECTED");
-                                    noEvents.setText(frag.getResources().getString(R.string.noEvents));
-                                    exploreBttn.setText(frag.getResources().getString(R.string.toExplore));
+                                    noEvents.setText(fragView.getResources().getString(R.string.noEvents));
+                                    exploreBttn.setText(fragView.getResources().getString(R.string.toExplore));
                                     exploreBttn.setVisibility(View.VISIBLE);
                                 }
 

@@ -38,7 +38,7 @@ public class CompleteEvent extends AppCompatActivity {
     private int numChecks;
     private Button interested;
     private String eventID;
-    private String userID ="acnlUGqlWwWU4ihfwKBtOouMIZt2";
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,7 @@ public class CompleteEvent extends AppCompatActivity {
         setContentView(R.layout.activity_complete_event);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         event = (Event)getIntent().getSerializableExtra("KEY");
+        userID = Main.settingsFrag.userID;
 
         // find event ID for this event
         DatabaseReference  allEventsRef = databaseRef.child("Events");
