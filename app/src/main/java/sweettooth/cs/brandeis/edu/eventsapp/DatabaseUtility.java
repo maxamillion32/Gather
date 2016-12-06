@@ -154,7 +154,7 @@ public class DatabaseUtility {
                                 System.out.println(event.category);
                                 System.out.println("Event Date: " + event.getDateTime().formatSimpleDate());
                                 System.out.println("Current Date: " + currentDateTime.formatSimpleDate());
-                                if (event.getDateTime().compareTo(currentDateTime) < 0) {
+                                if (event.getDateTime().compareTo(currentDateTime) <= 0) {
                                     Log.d("", "Adding event to set...");
                                     usersEvents.add(event);
                                 }
