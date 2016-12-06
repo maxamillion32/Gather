@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by Will_Masha on 11/20/2016.
- */
+ * MyEventsHomeTrackerAdapter--custom adapter for populating
+ * listview or gridview of user's events*/
 
 public class MyEventsHomeTrackerAdapter extends BaseAdapter {
 
@@ -30,12 +30,12 @@ public class MyEventsHomeTrackerAdapter extends BaseAdapter {
 
     //simply returns argument
     public long getItemId(int index) {
-        //TODO: should return database-set ID
         return index;
     }
 
-    //called iteratively to inflate each log entry and set text fields--reuses view
+    //called iteratively to inflate each event entry and set text fields--reuses view
     public View getView(int index, View view, ViewGroup parent) {
+        //if parent is a gridview...
         if (parent.getId() == R.id.home_gridview) {
             if (view == null) {
                 LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -51,6 +51,7 @@ public class MyEventsHomeTrackerAdapter extends BaseAdapter {
             } else {
                 throw new RuntimeException("item should be of type Event");
             }
+        //parent should be listview
         } else {
             if (view == null) {
                 LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -72,9 +73,8 @@ public class MyEventsHomeTrackerAdapter extends BaseAdapter {
         return view;
     }
 
-    //given descrption and notes, constructs single data entry and adds it to list
+    //populates adapter's list given list of events
     public void populateEventsList (Collection<Event> events) {
         this.myEvents = new ArrayList<Event>(events);
     }
-
 }

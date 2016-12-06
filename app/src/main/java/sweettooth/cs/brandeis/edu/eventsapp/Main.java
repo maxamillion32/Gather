@@ -62,7 +62,7 @@ public class Main extends AppCompatActivity {
         bottomBar.mapColorForTab(2, "#7B1FA2");
         bottomBar.mapColorForTab(3, "#FF5252");
 
-        //jump to settings fragment if no one is logged in
+        //jump to settings fragment if no one is logged in and hide bottom bar
         if (SettingsFragment.userID == null) {
             bottomBar.selectTabAtPosition(3, false);
             bottomBar.hide();

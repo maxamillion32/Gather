@@ -1,10 +1,9 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
-
 import java.io.Serializable;
 
 /**
- * Event object class
+ * Event--represents a single Gather event
  */
 
 public class Event implements Comparable<Event>, Serializable {
@@ -75,16 +74,7 @@ public class Event implements Comparable<Event>, Serializable {
         checks++;
     }
 
-    public String[] detailArray () {
-        String[] eventDetails = new String[5];
-        eventDetails[0] = "Title: " + getTitle();
-        eventDetails[1] = "Time: " + getDateTime().formatSimpleDate();
-        eventDetails[2] = "Description: " + getDescription();
-        eventDetails[3] = "Category: " + getCategory();
-        eventDetails[4] = "Location: " + getLocation();
-        return eventDetails;
-    }
-
+    //allows sorting of events by date
     public int compareTo(Event otherEvent) {
         return this.getDateTime().compareTo(otherEvent.getDateTime());
     }

@@ -3,7 +3,7 @@ package sweettooth.cs.brandeis.edu.eventsapp;
 import java.io.Serializable;
 
 /**
- * DateTime class
+ * DateTime--custom class representing date and time
  */
 
 public class DateTime implements Comparable<DateTime>, Serializable {
@@ -14,10 +14,8 @@ public class DateTime implements Comparable<DateTime>, Serializable {
     public int month;
     public int year;
 
-
-
     public DateTime () {
-
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public DateTime (int y, int m, int d, int h, int min) {
@@ -59,7 +57,7 @@ public class DateTime implements Comparable<DateTime>, Serializable {
     public void setMinute(int minute) { this.minute = minute; }
 
 
-    //most recent first
+    //allows chronological sorting
     public int compareTo(DateTime otherDateTime) {
         //int year = dateTime.getYear();
         int otherYear = otherDateTime.getYear();
@@ -92,6 +90,7 @@ public class DateTime implements Comparable<DateTime>, Serializable {
         return this.day + " " + this.month + " " + this.year;
     }
 
+    //formats simple string representing date
     public String formatSimpleDate() {
         int monthNum = this.month;
         int hourMilitary = this.hour;
@@ -100,40 +99,40 @@ public class DateTime implements Comparable<DateTime>, Serializable {
         String month;
         switch (monthNum) {
             case 1:
-                month = "JAN";
+                month = "Jan";
                 break;
             case 2:
-                month = "FEB";
+                month = "Feb";
                 break;
             case 3:
-                month = "MAR";
+                month = "Mar";
                 break;
             case 4:
-                month = "APR";
+                month = "Apr";
                 break;
             case 5:
-                month = "MAY";
+                month = "May";
                 break;
             case 6:
-                month = "JUN";
+                month = "Jun";
                 break;
             case 7:
-                month = "JUL";
+                month = "Jul";
                 break;
             case 8:
-                month = "AUG";
+                month = "Aug";
                 break;
             case 9:
-                month = "SEPT";
+                month = "Sept";
                 break;
             case 10:
-                month = "OCT";
+                month = "Oct";
                 break;
             case 11:
-                month = "NOV";
+                month = "Nov";
                 break;
             case 12:
-                month = "DEC";
+                month = "Dec";
                 break;
             default:
                 throw new RuntimeException("'" + this.month + "'" + " invalid month");

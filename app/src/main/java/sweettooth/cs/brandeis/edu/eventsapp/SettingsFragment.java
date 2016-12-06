@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.AppIndex;
@@ -24,7 +21,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,15 +34,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.roughike.bottombar.BottomBarFragment;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Settings Fragment
+ * Settings Fragment--controls login and logout, and
+ * user's selection of categories to subscribe to. Part
+ * of the function of this fragment is to prevent users
+ * who are not logged in to reach other fragments.
  */
 
 public class SettingsFragment extends Fragment implements
@@ -67,9 +63,11 @@ public class SettingsFragment extends Fragment implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-
+    //ID of event that is simply a placeholder
+    //The associated event is useful for maintaining user-to-events nodes,
+    //since user's key will be deleted without at least one sub-entry
     protected final String DUMMY_EVENT_ID = "-KXEB-PUaJz2SHr5qxyF";
-    protected final String DUMMY_CATEGORY = "Placeholder";
+    //whether user's immediate prior state was logged out
     private boolean wasLoggedOut = false;
 
 
@@ -88,29 +86,22 @@ public class SettingsFragment extends Fragment implements
         View settingsFragmentView = inflater.inflate(R.layout.fragment_settings, container, false);
 
 
-        //Subscribe to catagories code starts here
+        //Subscribe to categories code starts here
         subbutton = (Button) settingsFragmentView.findViewById(R.id.subscribe);
         subList = (TextView) settingsFragmentView.findViewById(R.id.subList);
+
         if ((userID = getUserID()) == null) {
             wasLoggedOut = true;
             Main.bottomBar.hide();
             subbutton.setVisibility(View.GONE);
             subList.setVisibility(View.GONE);
-            //PERHAPS DON'T DISPLAY ANYTHING REGARDING SUBSCRIBED CATEGORIES,
-            //COMPLICATED THOUGH IF USER IS SIGNED IN AND THEN SIGNS OUT
-            //System.out.println("NULL USER IN SETTINGS");
-
-            //setSubButtonAction();
-
-        }
-        else {
-
+        } else {
             subbutton.setVisibility(View.VISIBLE);
             subList.setVisibility(View.VISIBLE);
             setSubButtonAction();
         }
 
-            //Subscribe to catagories code ends here
+        //Subscribe to categories code ends here
 
 
         //Google Authentication code starts here
@@ -135,32 +126,25 @@ public class SettingsFragment extends Fragment implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    //if (userID == null || !userID.equals(currentUserId)) {
+                    //conditional necessary since method called even when it is not
+                    //the case that a different user has just logged in
                     if (wasLoggedOut) {
                         userID = getUserID();
-                        System.out.println("USERID:" + userID);
-                        addNewUserToDB();
-                        //Main.homeFrag.populateGridView();
+                        //ensures user has associated dummy event
+                        DatabaseReference usersEventsRef = databaseRef.child("UserToEvents").child(userID);
+                        usersEventsRef.child(DUMMY_EVENT_ID).setValue(true);
+                        //forces user to home fragment
                         Main.bottomBar.selectTabAtPosition(0, true);
                         Main.bottomBar.show();
                         wasLoggedOut = false;
                     }
                     Log.d("GoogleActivity", "onAuthStateChanged:signed_in:" + user.getUid());
-
-                    //startActivity(new Intent("android.intent.action.MAIN"));
-                    //System.out.println("should be restarting main");
-
-                    //Main.bottomBar.show();
-                    //Main.bottomBar.setDefaultTabPosition(0);
-                    //Main.bottomBar.selectTabAtPosition(0, false);
-                    //isLoggedIn = true;
-
                 } else {
                     wasLoggedOut = true;
+                    //hide bar if no one logged in
                     Main.bottomBar.hide();
                     Log.d("GoogleActivity", "onAuthStateChanged:signed_out");
                 }
-
             }
         };
         //Google Authentication code ends here
@@ -528,15 +512,4 @@ public class SettingsFragment extends Fragment implements
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
-    private void addNewUserToDB() {
-        DatabaseReference usersEventsRef = databaseRef.child("UserToEvents").child(userID);
-        usersEventsRef.child(DUMMY_EVENT_ID).setValue(true);
-
-        DatabaseReference usersCategoriesRef = databaseRef.child("UserToCategories").child(userID);
-        //usersCategoriesRef.child(DUMMY_CATEGORY).setValue(true);
-    }
-
-
-
 }
