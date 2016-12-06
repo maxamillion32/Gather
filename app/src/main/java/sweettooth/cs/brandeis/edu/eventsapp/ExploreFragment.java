@@ -231,7 +231,7 @@ public class ExploreFragment extends Fragment {
                                 while (i.hasNext()) {
                                     Map.Entry entry = (Map.Entry) i.next();
                                     Event event = (Event) entry.getValue();
-                                    eventList.add(event.checks + " interested: " + event.title);
+                                    eventList.add(event.checks + " interested: \n" + event.title);
                                 }
                                 //sort event list by most popular
                                 Collections.sort(eventList, Collections.<String>reverseOrder());
@@ -260,8 +260,9 @@ public class ExploreFragment extends Fragment {
                                         if (title.contains("Events on " + dateDialog)) {
                                             //do nothing then because it is not an event
                                         } else {
+                                            System.out.println(title);
                                             //only extract title from text view
-                                            String[] toGetTitle = title.split("interested: ");
+                                            String[] toGetTitle = title.split("interested: \n");
                                             String titleFromTextView = toGetTitle[1];
                                             //pull up event activity
                                             Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
@@ -307,6 +308,7 @@ public class ExploreFragment extends Fragment {
                 ColorDrawable darkBlue = new ColorDrawable(getResources().getColor(R.color.caldroid_holo_blue_dark));
                 ColorDrawable fiveFiveFive = new ColorDrawable(getResources().getColor(R.color.caldroid_555));
                 ColorDrawable primary = new ColorDrawable(getResources().getColor(R.color.colorPrimary));
+                ColorDrawable yellow = new ColorDrawable(getResources().getColor(R.color.yellow));
                 //new calendar instance
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.MONTH,month-1);
@@ -335,7 +337,7 @@ public class ExploreFragment extends Fragment {
                         //go through list of events and find most popular category
                         for (int x = 0; x < colorMe.size(); x++) {
                             //same date, user is subscribed to category, and has at least 1 check?
-                            if (colorMe.get(x).equals(String.valueOf(i) + " " + month + " " + year) && listOfTruePref.contains(colorMe.get(x+1)) && Integer.parseInt(colorMe.get(x+2)) != 0) {
+                            if (colorMe.get(x).equals(String.valueOf(i) + " " + month + " " + year) && listOfTruePref.contains(colorMe.get(x + 1))) {
                                 //first entry on this date is most popular until a more popular one is found
                                 if (counter == 0) {
                                     //event category
@@ -353,8 +355,11 @@ public class ExploreFragment extends Fragment {
                                 }
                             }
                         }
+                        //all events that day have no interest
+                        if (popularity == 0) {
+                            caldroidFragment.setBackgroundDrawableForDate(yellow, cal.getTime());
                         //color event category most popular for that day
-                        if (popularCat.equals("Sports")) {
+                        } else if (popularCat.equals("Sports")) {
                             //color day blue since there is an event
                             caldroidFragment.setBackgroundDrawableForDate(lightBlue, cal.getTime());
                         } else if (popularCat.equals("Business")) {
