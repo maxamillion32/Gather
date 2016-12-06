@@ -22,6 +22,7 @@
     <string name="Business">Business</string>
     <string name="Sports">Sports</string>
     <string name="Other">Other</string>
+    <string name="nointerest">Event exists but there is no interest!</string>
 
     <string-array name="categories">
         <item>Business</item>
