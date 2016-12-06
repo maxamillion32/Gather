@@ -21,7 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -130,7 +132,7 @@ public class DatabaseUtility {
                             cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 0, 0);
 
                     final Set<String> eventIDs = new HashSet<String>();
-                    final Set<Event> usersEvents = new TreeSet<Event>();
+                    final List<Event> usersEvents = new ArrayList<Event>();
 
                     //DataSnapshot usersEventIDsSnapshot = dataSnapshot.child("UserToEvents").child(userID);
                     //Iterable<DataSnapshot> childSnapshots = usersEventIDsSnapshot.getChildren();
@@ -154,10 +156,13 @@ public class DatabaseUtility {
                                 System.out.println(event.category);
                                 System.out.println("Event Date: " + event.getDateTime().formatSimpleDate());
                                 System.out.println("Current Date: " + currentDateTime.formatSimpleDate());
-                                if (event.getDateTime().compareTo(currentDateTime) < 0) {
+                                if (event.getDateTime().compareTo(currentDateTime) <= 0) {
                                     Log.d("", "Adding event to set...");
                                     usersEvents.add(event);
                                 }
+                                System.out.println("LIST SIZE: " + usersEvents.size());
+                                Collections.sort(usersEvents);
+                                Collections.reverse(usersEvents);
                                 adapter.populateEventsList(usersEvents);
 
                                 if (tabEnum == Tab.HOME) {
