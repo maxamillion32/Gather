@@ -8,15 +8,16 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".Main">
-            android:label="Main">
+        <activity android:name=".Main"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddEvent">
+        <activity android:name=".AddEvent"
+            android:screenOrientation="portrait"
             android:parentActivityName="sweettooth.cs.brandeis.edu.eventsapp.Main" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -28,7 +29,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".CompleteEvent">
+        <activity android:name=".CompleteEvent"
+            android:screenOrientation="portrait"
             android:parentActivityName="sweettooth.cs.brandeis.edu.eventsapp.Main" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
