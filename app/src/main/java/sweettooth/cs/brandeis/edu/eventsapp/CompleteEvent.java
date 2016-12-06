@@ -46,7 +46,9 @@ public class CompleteEvent extends AppCompatActivity {
         setContentView(R.layout.activity_complete_event);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         event = (Event)getIntent().getSerializableExtra("KEY");
-        userID = Main.settingsFrag.userID;
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
 
         // find event ID for this event
         DatabaseReference  allEventsRef = databaseRef.child("Events");
