@@ -1,40 +1,26 @@
 package sweettooth.cs.brandeis.edu.eventsapp;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
- * MyEvents Fragment
- */
+ * MyEventsFragment--shows a clickable listview of events
+ * user has indicated interest in*/
 
 public class MyEventsFragment extends Fragment {
 
+    private static final String logTag = "MyEventsFragment";
     protected ListView myEventsListView;
     protected View myEventsFragmentView;
-    protected static MyEventsHomeTrackerAdapter homeTrackerAdapter;
-    boolean listSet = false;
-    protected TextView noEvents;
-    protected Button exploreBttn;
-    protected boolean viewsReady = false;
+    //object for iterating through database and populating listview
     private DatabaseUtility databaseUtil;
 
-    private static final String logTag = "MyEventsFragment";
-
+    //default contructor--important for fragments
     public MyEventsFragment() {
     }
 
@@ -50,31 +36,15 @@ public class MyEventsFragment extends Fragment {
 
         myEventsFragmentView = inflater.inflate(R.layout.fragment_my_events, container, false);
 
-        TextView hello = (TextView) myEventsFragmentView.findViewById(R.id.helloevents);
-
-        noEvents = (TextView) myEventsFragmentView.findViewById(R.id.no_events2);
-        exploreBttn = (Button) myEventsFragmentView.findViewById(R.id.button_to_explore2);
-
         myEventsListView = (ListView) myEventsFragmentView.findViewById(R.id.my_events_ListView);
 
-        FirebaseUser user;
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            databaseUtil = new DatabaseUtility(userID, myEventsFragmentView, myEventsListView,
+        //if user logged in, populate listview using DatabaseUtility
+        String userID;
+        if ((userID = SettingsFragment.userID) != null) {
+            databaseUtil = new DatabaseUtility(logTag, userID, myEventsFragmentView, myEventsListView,
                     this, new MyEventsHomeTrackerAdapter());
             databaseUtil.accessUserEvents(DatabaseUtility.Tab.MYEVENTS);
         }
-
         return myEventsFragmentView;
     }
-
-    /*protected void setListAdapter(MyEventsHomeTrackerAdapter adapter) {
-        if (myEventsFragmentView == null) {
-            homeTrackerAdapter = adapter;
-        } else {
-            myEventsListView = (ListView) myEventsFragmentView.findViewById(R.id.my_events_ListView);
-            myEventsListView.setAdapter(adapter);
-            listSet = true;
-        }
-    }*/
 }

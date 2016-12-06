@@ -16,14 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DatabaseTester">
-            android:label="Database Tester">
-            <intent-filter>
-                <action android:name="sweettooth.cs.brandeis.edu.eventsapp.DatabaseTester" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".AddEvent">
             android:parentActivityName="sweettooth.cs.brandeis.edu.eventsapp.Main" >
             <meta-data

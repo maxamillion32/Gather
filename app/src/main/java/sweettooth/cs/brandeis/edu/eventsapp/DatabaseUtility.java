@@ -3,7 +3,6 @@ package sweettooth.cs.brandeis.edu.eventsapp;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,8 +11,6 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,55 +18,56 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
-/* This rudimentaty class tests the functionality of our Firebase Database--performs
-*  very basic database operations. It utilizes JSON database from Firebase account.
-*  See bottom of class for how JSON file looks*/
+/**
+ * DatabaseUtility--has one principal method that iterates
+ * through database and populates events into a view. This
+ * class is used both to populate the gridview on the home
+ * fragment and the listview on the my events fragment
+ */
 
 public class DatabaseUtility {
     //allow access to Firebase database
     private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final DatabaseReference databaseRef = database.getReference();
+    //indicated tab/fragment, home or my events
+    protected enum Tab {HOME, MYEVENTS};
 
-    protected enum Tab {HOME, MYEVENTS}
-
-    ;
+    //final needed for use of variables in inner classes
     private final String userID;
     private final View fragView;
+    //gridview or listview
     private final View subView;
     private final Fragment frag;
     private final MyEventsHomeTrackerAdapter adapter;
+    private final String logTag;
 
-    protected DatabaseUtility(String userID, View fragView, View subView, Fragment frag, MyEventsHomeTrackerAdapter adapter) {
+    protected DatabaseUtility(String logTag, String userID, View fragView, View subView,
+                              Fragment frag, MyEventsHomeTrackerAdapter adapter) {
         this.userID = userID;
         this.fragView = fragView;
         this.subView = subView;
         this.frag = frag;
         this.adapter = adapter;
+        this.logTag = logTag + ": in DButil";
     }
 
+    //iterates through firebase database using listeners and populates subview
     protected void accessUserEvents(final Tab tabEnum) {
 
-        Log.d("", "In accessUserEvents()");
-        System.out.println("UID: " + userID);
-
-        //if (tabEnum == Tab.HOME) {
-          //  final GridView myEventsGridView = Main.homeFrag.myEventsGridView;
-        //}
+        Log.d(logTag, "In accessUserEvents()");
 
         DatabaseReference usersEventsRef = databaseRef.child("UserToEvents").child(userID);
         final GridView subViewGrid;
         final ListView subViewList;
 
+        //displayed if there are no events to show--button goes to explore fragment
         final TextView noEvents;
         final Button exploreBttn;
 
@@ -88,13 +86,11 @@ public class DatabaseUtility {
             noEvents = null;
             subViewGrid = null;
             subViewList = null;
-            throw new RuntimeException("enum must be of HOME or MYEVENTS");
+            throw new RuntimeException("enum must be HOME or MYEVENTS");
         }
 
-
-        noEvents.setText("");
-        exploreBttn.setVisibility(View.INVISIBLE);
-        exploreBttn.setText("");
+        noEvents.setVisibility(View.GONE);
+        exploreBttn.setVisibility(View.GONE);
 
         //creates click listener for button
         View.OnClickListener buttnListener = new View.OnClickListener() {
@@ -106,7 +102,6 @@ public class DatabaseUtility {
         };
 
         exploreBttn.setOnClickListener(buttnListener);
-        //final MyEventsFragment myEventsFrag = Main.myEventsFrag;
 
         /*listener for changes to a database node (including changes to children) in
           database--will be assigned to userEventsRef*/
@@ -117,80 +112,81 @@ public class DatabaseUtility {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.d("", "In onDataChange() for user's events");
+                Log.d(logTag, "In onDataChange() for user's events");
                 if (dataSnapshot.hasChildren()) {
 
+                    //gets DateTime of current time, for purpose of filtering out passed events
                     final Date currentDate = new Date();
-
-                    //System.out.println("TOTAL DATE: " + currentDate.toString());
-                    //System.out.println("YEAR: " + currentDate.getYear());
-                    //System.out.println("MONTH: " + currentDate.getMonth());
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(currentDate);
                     System.out.println(cal.toString());
                     final DateTime currentDateTime = new DateTime(cal.get(Calendar.YEAR),
                             cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 0, 0);
 
+                    //set of ids for events user is interested in
                     final Set<String> eventIDs = new HashSet<String>();
+                    //list of events interested in
                     final List<Event> usersEvents = new ArrayList<Event>();
 
-                    //DataSnapshot usersEventIDsSnapshot = dataSnapshot.child("UserToEvents").child(userID);
-                    //Iterable<DataSnapshot> childSnapshots = usersEventIDsSnapshot.getChildren();
                     Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
                     for (DataSnapshot child : childSnapshots) {
                         System.out.println(child.getKey());
                         eventIDs.add(child.getKey());
                     }
 
+                    //reference to all events
                     DatabaseReference eventsRef = dataSnapshot.getRef().getRoot().child("Events");
 
+                    //nested listener for all events--however, onDataChange will only be called
+                    //upon attachment since we will use addListenerForSingleValueEvent method
+                    //(see below). Attaching a listener is the only means to access the values
+                    //in database, so we do it this way even though the fragment does not need
+                    //to listen for any change to database under events node
                     ValueEventListener eventsListener = new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            Log.d("", "In onDataChange() for all events, within onDataChange() for user's events");
+                            Log.d(logTag, "In onDataChange() for all events, within onDataChange() for user's events");
                             //DataSnapshot eventsSnapshot = dataSnapshot.child("Events");
                             for (String eventID : eventIDs) {
-                                System.out.println(eventID);
+                                //gets snapshot of an event
                                 DataSnapshot childSnapshot = dataSnapshot.child(eventID);
+                                //reconstitutes stored event object
                                 Event event = childSnapshot.getValue(Event.class);
-                                System.out.println(event.category);
-                                System.out.println("Event Date: " + event.getDateTime().formatSimpleDate());
-                                System.out.println("Current Date: " + currentDateTime.formatSimpleDate());
+                                //only adds events of today or in the future
                                 if (event.getDateTime().compareTo(currentDateTime) <= 0) {
-                                    Log.d("", "Adding event to set...");
+                                    Log.d(logTag, "Adding event to set...");
                                     usersEvents.add(event);
                                 }
-                                System.out.println("LIST SIZE: " + usersEvents.size());
+                                //sorts events by date
                                 Collections.sort(usersEvents);
                                 Collections.reverse(usersEvents);
-                                adapter.populateEventsList(usersEvents);
 
+                                //for populateing subView...
+                                adapter.populateEventsList(usersEvents);
                                 if (tabEnum == Tab.HOME) {
                                     subViewGrid.setAdapter(adapter);
                                 } else {
                                     subViewList.setAdapter(adapter);
                                 }
-                                //Log.d("", "about to set adapter to my events");
-                                //Log.d("", "ListView adapter should be set!");
+                                Log.d(logTag, "subView should be set");
                             }
                             if (usersEvents.size() == 0) {
-                                Log.wtf("CTK", ""+usersEvents.size());
-                                System.out.println("NO EVENTS DETECTED");
+                                //No events to show!
                                 noEvents.setText(fragView.getResources().getString(R.string.noEvents));
                                 exploreBttn.setText(fragView.getResources().getString(R.string.toExplore));
+                                noEvents.setVisibility(View.VISIBLE);
                                 exploreBttn.setVisibility(View.VISIBLE);
-                            } else {
-                                noEvents.setVisibility(View.GONE);
-                                exploreBttn.setVisibility(View.GONE);
                             }
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            Log.d("", "onCancelled : listener for all events, within listener for user's events",
+                            //error w/ onDataChange
+                            Log.d(logTag, "onCancelled : listener for all events, within listener for user's events",
                                     databaseError.toException());
                         }
                     };
+                    //onDataChange only called upon attachment
                     eventsRef.addListenerForSingleValueEvent(eventsListener);
                 }
             }
@@ -198,13 +194,13 @@ public class DatabaseUtility {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //error w/ onDataChange
-                Log.d("", "onCancelled : listener for user's events ", databaseError.toException());
+                Log.d(logTag, "onCancelled : listener for user's events ", databaseError.toException());
             }
         };
-        //attaches listener to reference
+        //attaches listener to reference--onDataChange called whenever database reference has changes
         usersEventsRef.addValueEventListener(userEventsListener);
 
-        //sets click listener for ListView-entry deleted upon click
+        //sets click listener for subView-goes to full-screen activity of event on click
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -225,4 +221,3 @@ public class DatabaseUtility {
         }
     }
 }
-

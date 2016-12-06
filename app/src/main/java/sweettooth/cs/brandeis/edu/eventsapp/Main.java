@@ -1,23 +1,30 @@
+// Names:      William Edgecomb, Chelsi Hu,
+//             Tyler Lichten, Christine Kim
+// Team Name:  Sweet Tooth
+// Course:     COSI 153A
+// Assignment: Final Project
+/* App:        Gather--crowdsourced calendar
+               app that helps users find and
+               share local public events*/
+// Semester:   Fall 2016
+
+
 package sweettooth.cs.brandeis.edu.eventsapp;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarFragment;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends AppCompatActivity {
 
-    //protected static String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    //allows references to bottom bar and fragments through main
     protected static BottomBar bottomBar;
     protected static HomeFragment homeFrag;
     protected static MyEventsFragment myEventsFrag;
@@ -28,32 +35,23 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        System.out.println("ON CREATE MAIN");
 
         myEventsFrag = MyEventsFragment.newInstance("Content for my events.");
-        System.out.println("HERE");
         homeFrag = HomeFragment.newInstance("Content for home.");
         exploreFrag = ExploreFragment.newInstance("Content for explore.");
         settingsFrag = SettingsFragment.newInstance("Content for settings.");
 
+        //settings fragment to be location where userID is stored and referenced
         if(SettingsFragment.getUserID() != null){
             SettingsFragment.userID = SettingsFragment.getUserID();
         }
-        //does basic test of database functionality--perhaps uncomment when we turn in on Tues
 
-        //dbUtil.test();
-
-        //starts activity to test database functionality--nothing implemented right now
-        //startActivity(new Intent("sweettooth.cs.brandeis.edu.eventsapp.DatabaseTester"));
-
-        //bottom navigation bar
-
+        /*BottomBar is a third-party object that connects fragments via a clickable
+          horizontal menu that shows at the bottom of the screen*/
         bottomBar = BottomBar.attach(this, savedInstanceState);
-        BottomBarFragment eventsBottomBar = new BottomBarFragment(myEventsFrag, R.drawable.ic_my_events, "MY EVENTS");
-
         bottomBar.setFragmentItems(getFragmentManager(), R.id.fragmentContainer,
                 new BottomBarFragment(homeFrag, R.drawable.ic_home, "HOME"),
-                eventsBottomBar,
+                new BottomBarFragment(myEventsFrag, R.drawable.ic_my_events, "MY EVENTS"),
                 new BottomBarFragment(exploreFrag, R.drawable.ic_explore, "EXPLORE"),
                 new BottomBarFragment(settingsFrag, R.drawable.ic_settings, "SETTINGS")
         );
@@ -64,24 +62,15 @@ public class Main extends AppCompatActivity {
         bottomBar.mapColorForTab(2, "#7B1FA2");
         bottomBar.mapColorForTab(3, "#FF5252");
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        //jump to settings fragment if no one is logged in
+        if (SettingsFragment.userID == null) {
             bottomBar.selectTabAtPosition(3, false);
             bottomBar.hide();
         }
-
-
     }
 
-    //@Override
-    //public void onResume() {
-      //  super.onResume();
-        //if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            //enteredWithCredentials = false;
-            //bottomBar.selectTabAtPosition(3, true);
-            //bottomBar.hide();
-        //}
-    //}
-
+    //menu is for directing to activity in which one ca
+    //add an event to public calendar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -99,5 +88,4 @@ public class Main extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
