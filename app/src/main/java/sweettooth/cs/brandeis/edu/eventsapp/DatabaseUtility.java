@@ -163,6 +163,9 @@ public class DatabaseUtility {
                                     noEvents.setText(frag.getResources().getString(R.string.noEvents));
                                     exploreBttn.setText(frag.getResources().getString(R.string.toExplore));
                                     exploreBttn.setVisibility(View.VISIBLE);
+                                } else {
+                                    noEvents.setVisibility(View.GONE);
+                                    exploreBttn.setVisibility(View.GONE);
                                 }
 
                                 adapter.populateEventsList(usersEvents);
