@@ -226,11 +226,11 @@ public class HomeFragment extends Fragment {
                                 }
 
                             }
-
+                            events = new ArrayList<Event>();
                             for(int i = 0; i < 5; i++){
 
                                 Event event = allevents.get(i);
-                                System.out.println(               "EVENT: " + event.getTitle() + event.getChecks());
+
 
                                 events.add(event);
                                 texts.get(i).setText(event.getTitle() + "\n" + event.getDescription() + "\n" + event.getDateTime().formatSimpleDate());
