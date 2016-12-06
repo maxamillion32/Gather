@@ -1,0 +1,353 @@
+{
+  "CategoriesToEvents" : {
+    "Business" : {
+      "-KXc8viurAdKW4H5TE9o" : true,
+      "-KYHCOX-uTwvIv-ZvAvr" : true,
+      "-KYHCojGg8EW_2V8XJHm" : true,
+      "-KYKGD1I4s8IshU2-PMQ" : true
+    },
+    "Community" : {
+      "-KXc3rxfrptqsVViodOk" : true,
+      "-KXcI3QocMz9Dn3R1jZT" : true,
+      "-KYFWKezfHlEsOzPY0-Q" : true,
+      "-KYFXBHFY8QXLwx6i1QK" : true
+    },
+    "Music" : {
+      "-KWoway87rwtn87t2V9K" : true,
+      "-KXcCCK8wvWSYY9yP4fj" : true,
+      "-KYG3msS2P8v2f35GCY2" : true
+    },
+    "Other" : {
+      "-KXcMXSLe5IZ0akrnk_C" : true,
+      "-KYHCLgWumWXUASIpZ2b" : true,
+      "-KYHCdoqa4rJW-btp55P" : true
+    },
+    "Sports" : {
+      "-KWV2yPiqNA4IgAbWUl7" : true,
+      "-KYHZdI8CtlTYtG-rRL1" : true
+    }
+  },
+  "Events" : {
+    "-KWV2yPiqNA4IgAbWUl7" : {
+      "category" : "Sports",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 25,
+        "hour" : 22,
+        "minute" : 30,
+        "month" : 11,
+        "year" : 2016
+      },
+      "description" : "Bruins take on Rangers in the playoffs",
+      "location" : "Warrior Ice Arena",
+      "title" : "Bruins Game"
+    },
+    "-KWoway87rwtn87t2V9K" : {
+      "category" : "Music",
+      "checks" : 2,
+      "dateTime" : {
+        "day" : 8,
+        "hour" : 14,
+        "minute" : 0,
+        "month" : 3,
+        "year" : 2017
+      },
+      "description" : "Donna The Buffalo playing at Crane Beach",
+      "location" : "Crane Beach, MA",
+      "title" : "Concert at the Beach"
+    },
+    "-KXEB-PUaJz2SHr5qxyF" : {
+      "category" : "Other",
+      "checks" : -1,
+      "dateTime" : {
+        "day" : 1,
+        "hour" : 1,
+        "minute" : 1,
+        "month" : 1,
+        "year" : 1
+      },
+      "description" : "Placeholder",
+      "location" : "Placeholder",
+      "title" : "Placeholder"
+    },
+    "-KXc3rxfrptqsVViodOk" : {
+      "category" : "Community",
+      "checks" : 1,
+      "dateTime" : {
+        "day" : 5,
+        "hour" : 10,
+        "minute" : 0,
+        "month" : 5,
+        "year" : 2017
+      },
+      "description" : "Eccentric floats cruise through downtown Watertown",
+      "location" : "Main St. - Watertown, MA",
+      "title" : "Cinco de Mayo Parade"
+    },
+    "-KXc8viurAdKW4H5TE9o" : {
+      "category" : "Business",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 7,
+        "hour" : 12,
+        "minute" : 0,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Discuss business ethics with the city's business leaders",
+      "location" : "Brandeis University Hassenfeld Conference Center - Waltham, MA",
+      "title" : "Business Ethics Seminar"
+    },
+    "-KXcCCK8wvWSYY9yP4fj" : {
+      "category" : "Music",
+      "checks" : 1,
+      "dateTime" : {
+        "day" : 8,
+        "hour" : 8,
+        "minute" : 0,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Emancipator Ensemble and Ilya play live at The Sinclair",
+      "location" : "The Sinclair - Boston, MA",
+      "title" : "Emancipatory Ensemble & Ilya"
+    },
+    "-KXcELoCakKrOWzGjWLd" : {
+      "category" : "Sports",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 5,
+        "hour" : 2,
+        "minute" : 0,
+        "month" : 1,
+        "year" : 2017
+      },
+      "description" : "Epic snowball battle with Red Sox players followed by meet and greet",
+      "location" : "Fenway Park - Boston, MA",
+      "title" : "Snowball Fight w/ the Sox at Fenway Park"
+    },
+    "-KXcI3QocMz9Dn3R1jZT" : {
+      "category" : "Community",
+      "checks" : 1,
+      "dateTime" : {
+        "day" : 10,
+        "hour" : 8,
+        "minute" : 0,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Donate gently used winter clothes to children and adults in need",
+      "location" : "Arsenal Mall - Watertown, MA",
+      "title" : "Arsenal Mall Clothing Drive"
+    },
+    "-KXcMXSLe5IZ0akrnk_C" : {
+      "category" : "Other",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 17,
+        "hour" : 7,
+        "minute" : 0,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "All day indoor meditation event with special guest Thich Nhat Hanh",
+      "location" : "Cambridge Insight Meditation Center",
+      "title" : "Meditation Retreat"
+    },
+    "-KYFWKezfHlEsOzPY0-Q" : {
+      "category" : "Community",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 26,
+        "hour" : 16,
+        "minute" : 45,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Study for the upcoming MCAT",
+      "location" : "Cambridge MA",
+      "title" : "MCAT Study Group"
+    },
+    "-KYFXBHFY8QXLwx6i1QK" : {
+      "category" : "Community",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 20,
+        "hour" : 16,
+        "minute" : 49,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Stop by the Town Hall to Decorate our 67 foot Christmas Tree",
+      "location" : "Waltham MA",
+      "title" : "Christmas Tree Decorating"
+    },
+    "-KYG3msS2P8v2f35GCY2" : {
+      "category" : "Sports",
+      "checks" : 1,
+      "dateTime" : {
+        "day" : 5,
+        "hour" : 14,
+        "minute" : 20,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "New innovative way to golf while skydiving.",
+      "location" : "Sky",
+      "title" : "Skygolfing!"
+    },
+    "-KYHCLgWumWXUASIpZ2b" : {
+      "category" : "Other",
+      "checks" : 3,
+      "dateTime" : {
+        "day" : 10,
+        "hour" : 21,
+        "minute" : 0,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Watch the classic play outside at the park!",
+      "location" : "Boston Commons",
+      "title" : "12 Angry Jurors"
+    },
+    "-KYHCOX-uTwvIv-ZvAvr" : {
+      "category" : "Business",
+      "checks" : 1,
+      "dateTime" : {
+        "day" : 6,
+        "hour" : 22,
+        "minute" : 37,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "it was good",
+      "location" : "deissssss",
+      "title" : "Awesome presentation"
+    },
+    "-KYHCdoqa4rJW-btp55P" : {
+      "category" : "Other",
+      "checks" : 1,
+      "dateTime" : {
+        "day" : 10,
+        "hour" : 20,
+        "minute" : 0,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Listen and laugh as the comedian Aziz Ansari tours the USA with his hilarious jokes.",
+      "location" : "Harvard Square",
+      "title" : "Aziz Ansari: Tour "
+    },
+    "-KYHCojGg8EW_2V8XJHm" : {
+      "category" : "Business",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 26,
+        "hour" : 12,
+        "minute" : 30,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Take off your ties and wrestle in jello!",
+      "location" : "Gossman Gym, Brandeis University",
+      "title" : "Business Majors Jello Wrestling"
+    },
+    "-KYHZdI8CtlTYtG-rRL1" : {
+      "category" : "Sports",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 20,
+        "hour" : 19,
+        "minute" : 35,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "Come watch them beat the Penguins!",
+      "location" : "TD Garden ",
+      "title" : "Bruins Hockey Game"
+    },
+    "-KYKGD1I4s8IshU2-PMQ" : {
+      "category" : "Business",
+      "checks" : 0,
+      "dateTime" : {
+        "day" : 7,
+        "hour" : 19,
+        "minute" : 53,
+        "month" : 12,
+        "year" : 2016
+      },
+      "description" : "watch them beat the knicks",
+      "location" : "TD garden",
+      "title" : "Celtics Game"
+    }
+  },
+  "UserToCategories" : {
+    "2q5LebTVecda1bIJ7f310Ko9xoF3" : {
+      "Business" : true,
+      "Community" : true,
+      "Music" : true,
+      "Other" : true,
+      "Sports" : true
+    },
+    "CacCCQoOacbcAdHnOnU8Pj1tFs23" : {
+      "Business" : true,
+      "Community" : true,
+      "Music" : true,
+      "Other" : true,
+      "Sports" : true
+    },
+    "WYAaQnXSh0dnVohaz2jVH1PTNcC2" : {
+      "Business" : true,
+      "Community" : true,
+      "Music" : true,
+      "Other" : true,
+      "Sports" : true
+    },
+    "WaUzsjdZwcN0og4vTu00JHPhWW32" : {
+      "Business" : true,
+      "Community" : true,
+      "Music" : true,
+      "Other" : true,
+      "Sports" : true
+    },
+    "acnlUGqlWwWU4ihfwKBtOouMIZt2" : {
+      "Business" : true,
+      "Community" : true,
+      "Music" : true,
+      "Other" : true,
+      "Sports" : true
+    },
+    "qJIO0lDbqlNTgUn4zSflkUv51js1" : {
+      "Music" : true,
+      "Sports" : true
+    },
+    "xViHGKUkMbdlMa4iRomERmyqjIy1" : {
+      "Business" : true,
+      "Community" : true
+    }
+  },
+  "UserToEvents" : {
+    "2q5LebTVecda1bIJ7f310Ko9xoF3" : {
+      "-KWoway87rwtn87t2V9K" : true,
+      "-KXEB-PUaJz2SHr5qxyF" : true,
+      "-KYG3msS2P8v2f35GCY2" : true
+    },
+    "WYAaQnXSh0dnVohaz2jVH1PTNcC2" : {
+      "-KXEB-PUaJz2SHr5qxyF" : true,
+      "-KXcI3QocMz9Dn3R1jZT" : true,
+      "-KYHCLgWumWXUASIpZ2b" : true,
+      "-KYHCdoqa4rJW-btp55P" : true
+    },
+    "WaUzsjdZwcN0og4vTu00JHPhWW32" : {
+      "-KXEB-PUaJz2SHr5qxyF" : true
+    },
+    "acnlUGqlWwWU4ihfwKBtOouMIZt2" : {
+      "-KXEB-PUaJz2SHr5qxyF" : true
+    },
+    "xViHGKUkMbdlMa4iRomERmyqjIy1" : {
+      "-KXEB-PUaJz2SHr5qxyF" : true,
+      "-KXcCCK8wvWSYY9yP4fj" : true,
+      "-KYHCOX-uTwvIv-ZvAvr" : true
+    }
+  }
+}
