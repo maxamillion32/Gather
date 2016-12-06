@@ -17,6 +17,11 @@
     <string name="categoryLabel">Choose an event category:</string>
     <string name="noEvents">You have no upcoming Events</string>
     <string name="toExplore">Click to Explore!</string>
+    <string name="Music">Music</string>
+    <string name="Community">Community</string>
+    <string name="Business">Business</string>
+    <string name="Sports">Sports</string>
+    <string name="Other">Other</string>
 
     <string-array name="categories">
         <item>Business</item>

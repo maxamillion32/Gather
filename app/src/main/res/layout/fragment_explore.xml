@@ -21,6 +21,69 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/sportsTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Sports"
+                    android:textColor="@color/black"
+                    android:background="@color/caldroid_sky_blue"
+                    android:textSize="12dp"
+                    android:padding="4dp"
+                    android:layout_marginTop="10dp"/>
+                <TextView
+                    android:id="@+id/communityTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Community"
+                    android:textColor="@color/white"
+                    android:layout_toRightOf="@+id/sports"
+                    android:background="@color/colorPrimary"
+                    android:textSize="12dp"
+                    android:padding="4dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"/>
+                <TextView
+                    android:id="@+id/businessTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Business"
+                    android:layout_toRightOf="@+id/community"
+                    android:textColor="@color/black"
+                    android:background="@color/caldroid_light_red"
+                    android:textSize="12dp"
+                    android:padding="4dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"/>
+                <TextView
+                    android:id="@+id/musicTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Music"
+                    android:layout_toRightOf="@+id/business"
+                    android:textColor="@color/white"
+                    android:background="@color/caldroid_555"
+                    android:textSize="12dp"
+                    android:padding="4dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp" />
+                <TextView
+                    android:id="@+id/otherTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Other"
+                    android:layout_toRightOf="@+id/music"
+                    android:textColor="@color/white"
+                    android:background="@color/caldroid_holo_blue_dark"
+                    android:textSize="12dp"
+                    android:padding="4dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
