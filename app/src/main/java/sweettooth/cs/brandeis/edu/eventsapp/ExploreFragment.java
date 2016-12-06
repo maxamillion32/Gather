@@ -240,8 +240,13 @@ public class ExploreFragment extends Fragment {
                                 }
                                 //sort event list by most popular
                                 Collections.sort(eventList, Collections.<String>reverseOrder());
-                                //list of event titles
-                                String[] eventListArray = eventList.toArray(new String[eventList.size()]);
+                                //put date first in array
+                                String[] eventListArray = new String[eventList.size()+1];
+                                eventListArray[0] = "Events on " + dateDialog;
+                                //add each event title to array starting at index 1
+                                for (int j = 0; j < eventList.size(); j++) {
+                                    eventListArray[j+1] = eventList.get(j);
+                                }
                                 arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.daily_event_list, R.id.listTxtView, eventListArray);
                             }
                             listOfEvents.setAdapter(arrayAdapter);
@@ -256,26 +261,31 @@ public class ExploreFragment extends Fragment {
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                         //text view data clicked as string
                                         String title = (String) arrayAdapter.getItem(position);
-                                        //only extract title from text view
-                                        String[] toGetTitle = title.split("interested: ");
-                                        String titleFromTextView = toGetTitle[1];
-                                        //pull up event activity
-                                        Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
-                                        Bundle bundle = new Bundle();
-                                        //find the event that matches the text view clicked
-                                        Set set = mapOfEvents.entrySet();
-                                        Iterator i = set.iterator();
-                                        while (i.hasNext()) {
-                                            Map.Entry entry = (Map.Entry) i.next();
-                                            Event event = (Event) entry.getValue();
-                                            //check if event clicked in the dialog list is the same as the event in the database
-                                            if (event.title.equals(titleFromTextView) && event.dateTime.formatCalendarDateForMatching().equals(dateClickFormatted)) {
-                                                //dismiss dialog to avoid WindowsLeaked exception before starting activity
-                                                dialog.dismiss();
-                                                //start CompleteEvent activity and return boolean for showDialog
-                                                bundle.putSerializable("KEY", event);
-                                                intent.putExtras(bundle);
-                                                startActivityForResult(intent,1);
+                                        //check if user clicked the Events on Date item
+                                        if (title.contains("Events on " + dateDialog)) {
+                                            //do nothing then because it is not an event
+                                        } else {
+                                            //only extract title from text view
+                                            String[] toGetTitle = title.split("interested: ");
+                                            String titleFromTextView = toGetTitle[1];
+                                            //pull up event activity
+                                            Intent intent = new Intent("sweettooth.cs.brandeis.edu.eventsapp.CompleteEvent");
+                                            Bundle bundle = new Bundle();
+                                            //find the event that matches the text view clicked
+                                            Set set = mapOfEvents.entrySet();
+                                            Iterator i = set.iterator();
+                                            while (i.hasNext()) {
+                                                Map.Entry entry = (Map.Entry) i.next();
+                                                Event event = (Event) entry.getValue();
+                                                //check if event clicked in the dialog list is the same as the event in the database
+                                                if (event.title.equals(titleFromTextView) && event.dateTime.formatCalendarDateForMatching().equals(dateClickFormatted)) {
+                                                    //dismiss dialog to avoid WindowsLeaked exception before starting activity
+                                                    dialog.dismiss();
+                                                    //start CompleteEvent activity and return boolean for showDialog
+                                                    bundle.putSerializable("KEY", event);
+                                                    intent.putExtras(bundle);
+                                                    startActivityForResult(intent,1);
+                                                }
                                             }
                                         }
                                     }
