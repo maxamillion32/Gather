@@ -221,13 +221,7 @@ public class ExploreFragment extends Fragment {
                             if (mapOfEvents.size() == 0) {
                                 //no events on date or none meeting user preferences
                                 String[] noEvents = new String[1];
-                                //doesn't meet preferences but there are events
-                                if (mapForPref.containsValue(dateClickFormatted)){
-                                    noEvents[0] = "Change preferences to see event(s)";
-                                //no events exist on date
-                                } else {
-                                    noEvents[0] = "No events on " + dateDialog;
-                                }
+                                noEvents[0] = "No events on " + dateDialog;
                                 arrayAdapter = new ArrayAdapter<>(fragAct, R.layout.daily_event_list, R.id.listTxtView, noEvents);
                             } else {
                                 eventList = new ArrayList<>();
@@ -339,8 +333,8 @@ public class ExploreFragment extends Fragment {
                     if (colorMe.contains(String.valueOf(i) + " " + month + " " + year)) {
                         //go through list of events and find most popular category
                         for (int x = 0; x < colorMe.size(); x++) {
-                            //same date?
-                            if (colorMe.get(x).equals(String.valueOf(i) + " " + month + " " + year)) {
+                            //same date and user is subscribed to category?
+                            if (colorMe.get(x).equals(String.valueOf(i) + " " + month + " " + year) && listOfTruePref.contains(colorMe.get(x+1))) {
                                 //first entry on this date is most popular until a more popular one is found
                                 if (counter == 0) {
                                     //event category
