@@ -431,7 +431,7 @@ public class SettingsFragment extends Fragment implements
                         user.setText("Please sign in.");
                     }
                     else {
-
+                        user.setText("Attempting to sign in...");
                         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                         startActivityForResult(signInIntent, 1);
                     }
@@ -536,4 +536,7 @@ public class SettingsFragment extends Fragment implements
         DatabaseReference usersCategoriesRef = databaseRef.child("UserToCategories").child(userID);
         //usersCategoriesRef.child(DUMMY_CATEGORY).setValue(true);
     }
+
+
+
 }

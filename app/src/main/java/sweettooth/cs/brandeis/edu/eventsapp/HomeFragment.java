@@ -193,7 +193,6 @@ public class HomeFragment extends Fragment {
             protected Boolean doInBackground(Void... params) {
                 DatabaseReference topEventsRef = databaseRef.child("Events");
 
-                topEventsRef.orderByChild("checks");
 
                 ValueEventListener userEventsListener = new ValueEventListener() {
                     //called when attached to reference and when node or its children is modified
@@ -203,11 +202,36 @@ public class HomeFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChildren()) {
                             Iterable<DataSnapshot> childSnapshots = dataSnapshot.getChildren();
-                            int i = 0;
+                            List<Event> allevents = new ArrayList<Event>();
 
                             for (DataSnapshot child : childSnapshots) {
 
-                                Event event= child.getValue(Event.class);
+                                Event event = child.getValue(Event.class);
+                                if(allevents.size() == 0) {
+                                    allevents.add(event);
+                                }
+                                else {
+                                    boolean inserted = false;
+                                    for(int i = 0; i < allevents.size(); i++){
+                                        if(event.getChecks() > allevents.get(i).getChecks()){
+                                            allevents.add(i, event);
+                                            inserted = true;
+                                            break;
+                                        }
+                                    }
+                                    if(!inserted){
+                                        allevents.add(event);
+                                    }
+
+                                }
+
+                            }
+
+                            for(int i = 0; i < 5; i++){
+
+                                Event event = allevents.get(i);
+                                System.out.println(               "EVENT: " + event.getTitle() + event.getChecks());
+
                                 events.add(event);
                                 texts.get(i).setText(event.getTitle() + "\n" + event.getDescription() + "\n" + event.getDateTime().formatSimpleDate());
                                 if(event.getCategory().equals("Business")){
@@ -229,10 +253,7 @@ public class HomeFragment extends Fragment {
 
 
 
-                                i++;
-                                if(i == 5){
-                                    break;
-                                }
+
                             }
 
 
@@ -273,20 +294,6 @@ public class HomeFragment extends Fragment {
                         float currentX = event.getX();
 
                         // Handling left to right screen swap.
-                        if (lastX < currentX) {
-
-
-
-                            // Next screen comes in from left.
-                            viewFlipper.setInAnimation(getActivity(), R.anim.left_in);
-                            // Current screen goes out from right.
-                            viewFlipper.setOutAnimation(getActivity(), R.anim.right_out);
-
-                            // Display next screen.
-                            viewFlipper.showNext();
-                        }
-
-                        // Handling right to left screen swap.
                         if (lastX > currentX) {
 
 
@@ -295,6 +302,22 @@ public class HomeFragment extends Fragment {
                             viewFlipper.setInAnimation(getActivity(), R.anim.right_in);
                             // Current screen goes out from left.
                             viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
+
+                            // Display next screen.
+                            viewFlipper.showNext();
+                        }
+
+                        // Handling right to left screen swap.
+                        if (lastX < currentX) {
+
+
+
+
+
+                            // Next screen comes in from left.
+                            viewFlipper.setInAnimation(getActivity(), R.anim.left_in);
+                            // Current screen goes out from right.
+                            viewFlipper.setOutAnimation(getActivity(), R.anim.right_out);
 
                             // Display previous screen.
                             viewFlipper.showPrevious();
