@@ -329,12 +329,12 @@ public class ExploreFragment extends Fragment {
                     String popularCat = "";
                     int popularity = 0;
                     int counter = 0;
-                    //check if there is an event on the date
+                    //check if there exists an event on the date
                     if (colorMe.contains(String.valueOf(i) + " " + month + " " + year)) {
                         //go through list of events and find most popular category
                         for (int x = 0; x < colorMe.size(); x++) {
-                            //same date and user is subscribed to category?
-                            if (colorMe.get(x).equals(String.valueOf(i) + " " + month + " " + year) && listOfTruePref.contains(colorMe.get(x+1))) {
+                            //same date, user is subscribed to category, and has at least 1 check?
+                            if (colorMe.get(x).equals(String.valueOf(i) + " " + month + " " + year) && listOfTruePref.contains(colorMe.get(x+1)) && Integer.parseInt(colorMe.get(x+2)) != 0) {
                                 //first entry on this date is most popular until a more popular one is found
                                 if (counter == 0) {
                                     //event category
