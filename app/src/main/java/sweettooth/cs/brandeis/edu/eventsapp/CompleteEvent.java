@@ -127,14 +127,14 @@ public class CompleteEvent extends AppCompatActivity {
                     databaseRef.child("UserToEvents").child(userID).child(eventID).setValue(true);
                     // increase number of checks
                     Map<String, Object> childUpdates = new HashMap<>();
-                    childUpdates.put("checks", numChecks++);
+                    childUpdates.put("checks", ++numChecks);
                     databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
                 } else {
                     // delete event from user
                     databaseRef.child("UserToEvents").child(userID).child(eventID).removeValue();
                     // decrease number of checks
                     Map<String, Object> childUpdates = new HashMap<>();
-                    childUpdates.put("checks", numChecks--);
+                    childUpdates.put("checks", --numChecks);
                     databaseRef.child("Events").child(eventID).updateChildren(childUpdates);
                 }
                 String interest = numChecks +" users are interested in this event!";
