@@ -356,7 +356,7 @@ public class ExploreFragment extends Fragment {
                             }
                         }
                         //all events that day have no interest
-                        if (popularity == 0) {
+                        if (popularity == 0 && popularCat.length() > 1)  {
                             caldroidFragment.setBackgroundDrawableForDate(yellow, cal.getTime());
                         //color event category most popular for that day
                         } else if (popularCat.equals("Sports")) {
