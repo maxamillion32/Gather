@@ -2,7 +2,7 @@
 ##Bring the events to you!
 
 **School:** Brandeis University  
-**Course:** COSI 153a: Mobile Application Development 
+**Course:** COSI 153a: Mobile Application Development   
 **Professor:** Praveen Chaturvedi  
 **Semester:** Fall 2016    
 
