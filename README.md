@@ -8,4 +8,4 @@
 
 **Team Members:** Chelsi Hu, Christine Kim, Tyler Lichten, William Edgecomb
 
-**Description:** Final course project. Please see report (Gather_App_Report.pdf) for detailed description of app.
+**Description:** Final course project. Please see report (Gather_App_Report.pdf) for detailed description of app. See also our presentation.
